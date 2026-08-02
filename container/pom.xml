@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.retail</groupId>
+        <artifactId>catalogue-service</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.retail.container</groupId>
+    <artifactId>container</artifactId>
+
+    <properties>
+        <runtime.module.path>
+            ${project.build.directory}/module-path
+        </runtime.module.path>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.retail.core</groupId>
+            <artifactId>core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.retail.application</groupId>
+            <artifactId>application</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.retail.infrastructure.persistence</groupId>
+            <artifactId>persistence-adapter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.retail.infrastructure.web</groupId>
+            <artifactId>web-adapter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>3.11.0</version>
+
+            <executions>
+                <execution>
+                    <id>copy-runtime-dependencies</id>
+                    <phase>verify</phase>
+
+                    <goals>
+                        <goal>copy-dependencies</goal>
+                    </goals>
+
+                    <configuration>
+                        <outputDirectory>
+                            ${runtime.module.path}
+                        </outputDirectory>
+
+                        <includeScope>runtime</includeScope>
+                        <excludeTransitive>false</excludeTransitive>
+                    </configuration>
+                </execution>
+
+                <execution>
+                    <id>copy-container</id>
+                    <phase>verify</phase>
+
+                    <goals>
+                        <goal>copy</goal>
+                    </goals>
+
+                    <configuration>
+                        <artifactItems>
+                            <artifactItem>
+                                <groupId>${project.groupId}</groupId>
+                                <artifactId>${project.artifactId}</artifactId>
+                                <version>${project.version}</version>
+                                <type>jar</type>
+                                <outputDirectory>
+                                    ${runtime.module.path}
+                                </outputDirectory>
+                            </artifactItem>
+                        </artifactItems>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        </plugins>
+    </build>
+</project>
