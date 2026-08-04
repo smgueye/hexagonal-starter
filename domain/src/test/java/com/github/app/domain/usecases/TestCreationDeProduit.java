@@ -23,7 +23,6 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("UC1 - Création de produit")
 public class TestCreationDeProduit {
@@ -79,11 +78,6 @@ public class TestCreationDeProduit {
       produit.attributsSpecifique(),
       "unite",
       new Texte("KG"));
-  }
-
-  @Test
-  void doit_echouer_pour_tester_la_ci() {
-    assertEquals(2, 1);
   }
 
   private static void assertAttribut(AttributsSpecifique attributs, String nom, Object valeurAttendue) {
