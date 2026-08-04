@@ -80,6 +80,11 @@ public class TestCreationDeProduit {
       new Texte("KG"));
   }
 
+  @Test
+  void doit_echouer_pour_tester_la_ci() {
+    assertEquals(2, 1);
+  }
+
   private static void assertAttribut(AttributsSpecifique attributs, String nom, Object valeurAttendue) {
     assertThat(attributs.obtenir(nom))
       .as("attribut spécifique <%s>", nom)
