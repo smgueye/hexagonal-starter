@@ -4,7 +4,7 @@ import core.lib.ValueObject;
 
 import java.util.Objects;
 
-public class Sku extends ValueObject {
+public final class Sku extends ValueObject {
 
   private String valeur;
 
@@ -25,7 +25,7 @@ public class Sku extends ValueObject {
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
     Sku sku = (Sku) o;
-    return Objects.equals(valeur, sku.valeur);
+    return valeur.equals(sku.valeur);
   }
 
   @Override

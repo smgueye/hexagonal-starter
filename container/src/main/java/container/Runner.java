@@ -1,8 +1,8 @@
 package container;
 
-import application.factory.AppService;
-import application.ports.in.ForSayingHelloWorld;
-import application.ports.out.ForObtainingXxx;
+import com.github.app.application.factory.CatalogueMicroservice;
+import com.github.app.application.usecases.PourGererLeCatalogue;
+import com.github.app.domain.PourGererLesProduits;
 import core.lib.Driver;
 
 import java.io.IOException;
@@ -12,17 +12,17 @@ public class Runner {
     AdaptorSelector adaptorSelector = AdaptorSelector.fromFile(args[0]);
     DependencyConfigurator dependencyConfigurator = new DependencyConfigurator(adaptorSelector);
 
-    ForObtainingXxx xxxProvider = getForObtainingXxx(dependencyConfigurator);
+    PourGererLesProduits xxxProvider = getForObtainingXxx(dependencyConfigurator);
 
-    AppService app = dependencyConfigurator.buildApplication(xxxProvider);
+    CatalogueMicroservice app = dependencyConfigurator.buildApplication(xxxProvider);
     AppInitializer.init(app);
 
-    Driver forDoingXxx = dependencyConfigurator.lookupDriver(ForSayingHelloWorld.class, app);
+    Driver forDoingXxx = dependencyConfigurator.lookupDriver(PourGererLeCatalogue.class, app);
     forDoingXxx.run();
   }
 
-  private static ForObtainingXxx getForObtainingXxx(DependencyConfigurator dependencyConfigurator) {
-    ForObtainingXxx xxxProvider = dependencyConfigurator.lookupDrivenPort(ForObtainingXxx.class);
+  private static PourGererLesProduits getForObtainingXxx(DependencyConfigurator dependencyConfigurator) {
+    PourGererLesProduits xxxProvider = dependencyConfigurator.lookupDrivenPort(PourGererLesProduits.class);
     return xxxProvider;
   }
 }

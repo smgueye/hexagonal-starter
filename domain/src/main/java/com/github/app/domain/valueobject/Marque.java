@@ -1,15 +1,17 @@
 package com.github.app.domain.valueobject;
 
+import core.lib.ValueObject;
+
 import java.util.Objects;
 
-public class Marque {
+public final class Marque extends ValueObject {
 
   private final String valeur;
 
   public Marque(String valeur) {
-    Objects.requireNonNull(valeur);
-    assert !valeur.isEmpty();
-    this.valeur = valeur;
+    verifieArgumentNonVide(valeur,"La marque du produit est requise.");
+
+    this.valeur = valeur.strip();
   }
 
   public String valeur() {

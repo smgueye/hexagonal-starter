@@ -1,10 +1,12 @@
-import application.ports.out.ForObtainingXxx;
+import com.github.app.domain.PourGererLesProduits;
+import persistence.ProduitEnMemoire;
 
 module persistence.adapter {
   requires core;
   requires application;
+  requires domain;
 
   exports persistence;
 
-  provides ForObtainingXxx with persistence.StubXxxProviderAdapter;
+  provides PourGererLesProduits with ProduitEnMemoire;
 }

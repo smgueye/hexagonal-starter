@@ -1,18 +1,18 @@
 package web;
 
 import core.lib.Driver;
-import application.ports.in.ForSayingHelloWorld;
+import com.github.app.application.usecases.PourGererLeCatalogue;
 
 public class ForSayingHelloWebUIDriver implements Driver {
 
-  private static ForSayingHelloWorld forSayingHelloWorld;
+  private static PourGererLeCatalogue pourGererLeCatalogue;
 
-  public ForSayingHelloWebUIDriver(ForSayingHelloWorld forSayingHelloWorld) {
-    ForSayingHelloWebUIDriver.forSayingHelloWorld = forSayingHelloWorld;
+  public ForSayingHelloWebUIDriver(PourGererLeCatalogue pourGererLeCatalogue) {
+    ForSayingHelloWebUIDriver.pourGererLeCatalogue = pourGererLeCatalogue;
   }
 
-  public static ForSayingHelloWorld helloWorldTeller() {
-    return ForSayingHelloWebUIDriver.forSayingHelloWorld;
+  public static PourGererLeCatalogue helloWorldTeller() {
+    return ForSayingHelloWebUIDriver.pourGererLeCatalogue;
   }
 
   @Override

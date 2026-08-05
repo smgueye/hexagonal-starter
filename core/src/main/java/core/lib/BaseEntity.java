@@ -6,7 +6,12 @@ public abstract class BaseEntity<ID extends ValueObject> extends ValidationAsser
 
   private ID id;
 
-  public ID id() {
+  protected BaseEntity(ID id) {
+    verifieArgumentNonNull(id, "L'identifiant est requis.");
+    this.id = id;
+  }
+
+  public final ID id() {
     return id;
   }
 

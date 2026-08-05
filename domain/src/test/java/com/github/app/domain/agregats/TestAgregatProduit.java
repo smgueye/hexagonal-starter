@@ -1,4 +1,4 @@
-package com.github.app.domain.usecases;
+package com.github.app.domain.agregats;
 
 import com.github.app.domain.Produit;
 import com.github.app.domain.ProduitId;
@@ -11,7 +11,7 @@ import com.github.app.domain.valueobject.attributsspecifiques.Attribut;
 import com.github.app.domain.valueobject.attributsspecifiques.AttributsSpecifique;
 import com.github.app.domain.valueobject.attributsspecifiques.Numerique;
 import com.github.app.domain.valueobject.attributsspecifiques.Texte;
-import common.fixtures.ProduitFixtureBuilder;
+import com.github.app.domain.fixtures.ProduitFixtureBuilder;
 import core.lib.Argent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -24,8 +24,8 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayName("UC1 - Création de produit")
-public class TestCreationDeProduit {
+@DisplayName("Agregat Racine - Produit")
+public class TestAgregatProduit {
 
   @Test
   @DisplayName("Lorsque les informations sont valides")
@@ -66,18 +66,9 @@ public class TestCreationDeProduit {
       (p) -> assertThat(produit.prixUnitaire()).isEqualTo(unPrixUnitaire),
       (p) ->  assertThat(produit.statut()).isEqualTo(unStatut));
 
-    assertAttribut(
-      produit.attributsSpecifique(),
-      "puissance",
-      new Texte("500w"));
-    assertAttribut(
-      produit.attributsSpecifique(),
-      "poids",
-      new Numerique(1.8));
-    assertAttribut(
-      produit.attributsSpecifique(),
-      "unite",
-      new Texte("KG"));
+    assertAttribut(produit.attributsSpecifique(), "puissance", new Texte("500w"));
+    assertAttribut(produit.attributsSpecifique(), "poids", new Numerique(1.8));
+    assertAttribut(produit.attributsSpecifique(), "unite", new Texte("KG"));
   }
 
   private static void assertAttribut(AttributsSpecifique attributs, String nom, Object valeurAttendue) {
@@ -104,7 +95,7 @@ public class TestCreationDeProduit {
       })
           .as("La création d'un produit sans identifiant est refusée.")
           .isInstanceOf(IllegalArgumentException.class)
-          .hasMessage(Messages.L_IDENTIFIANT_DU_PRODUIT_EST_REQUIS);;
+          .hasMessage(Messages.L_IDENTIFIANT_EST_REQUIS);
     }
 
     @Test
@@ -115,7 +106,7 @@ public class TestCreationDeProduit {
       })
           .as("La création d'un produit sans sku est refusée.")
           .isInstanceOf(IllegalArgumentException.class)
-          .hasMessage(Messages.LE_SKU_DU_PRODUIT_EST_REQUIS);;
+          .hasMessage(Messages.LE_SKU_DU_PRODUIT_EST_REQUIS);
     }
 
     @Test

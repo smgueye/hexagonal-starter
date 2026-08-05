@@ -1,6 +1,6 @@
 package web;
 
-import application.ports.in.ForSayingHelloWorld;
+import com.github.app.application.usecases.PourGererLeCatalogue;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,15 +13,15 @@ import java.util.Optional;
 @RequestMapping
 public class HelloWorldController {
 
-  private final ForSayingHelloWorld forSayingHelloWorld;
+  private final PourGererLeCatalogue pourGererLeCatalogue;
 
-  public HelloWorldController(ForSayingHelloWorld forSayingHelloWorld) {
-    this.forSayingHelloWorld = forSayingHelloWorld;
+  public HelloWorldController(PourGererLeCatalogue pourGererLeCatalogue) {
+    this.pourGererLeCatalogue = pourGererLeCatalogue;
   }
 
   @RequestMapping(value = "hello", method = RequestMethod.GET)
   public ResponseEntity<Map<String, String>> sayHello() {
-    forSayingHelloWorld.sayHelloUseCase();
+    // TODO
 
     return ResponseEntity.of(Optional.of(Map.of("k", "Hello World")));
   }

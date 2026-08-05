@@ -1,8 +1,8 @@
 package container;
 
-import application.factory.AppService;
-import application.ports.in.ForSayingHelloWorld;
-import application.ports.out.ForObtainingXxx;
+import com.github.app.application.factory.CatalogueMicroservice;
+import com.github.app.application.usecases.PourGererLeCatalogue;
+import com.github.app.domain.PourGererLesProduits;
 import core.lib.Adapter;
 import core.lib.Driver;
 import web.ForSayingHelloWebUIDriver;
@@ -54,14 +54,14 @@ public class DependencyConfigurator {
     return adapterAnnotation.name().equalsIgnoreCase(adapterName);
   }
 
-  public AppService buildApplication(ForObtainingXxx xxxProvider) {
-    return AppService.getInstance(xxxProvider);
+  public CatalogueMicroservice buildApplication(PourGererLesProduits xxxProvider) {
+    return CatalogueMicroservice.getInstance(xxxProvider);
   }
 
-  public Driver lookupDriver(Class<ForSayingHelloWorld> driverPortType, AppService app) {
+  public Driver lookupDriver(Class<PourGererLeCatalogue> driverPortType, CatalogueMicroservice app) {
     String adapterName = adapterSelector.adapterNameForPort(driverPortType);
     if (AdaptorSelector.SPRING_WEB.equals(adapterName)) {
-      return new ForSayingHelloWebUIDriver(app.helloWorldTeller());
+      return new ForSayingHelloWebUIDriver(app.createurDeProduit());
     }
 
     throw new RuntimeException("No driver found for driver port '" + driverPortType.getSimpleName() + "'");

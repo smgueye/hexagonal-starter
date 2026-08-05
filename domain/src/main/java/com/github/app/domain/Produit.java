@@ -11,10 +11,8 @@ import core.lib.Argent;
 
 import java.time.ZonedDateTime;
 
-public class Produit extends AggregateRoot<ProduitId> {
+public final class Produit extends AggregateRoot<ProduitId> {
 
-
-  private ProduitId id;
   private Sku sku;
   private String nom;
   private Famille famille;
@@ -26,7 +24,8 @@ public class Produit extends AggregateRoot<ProduitId> {
   private ZonedDateTime dateDeDerniereMiseAJour;
 
   private Produit(Builder builder) {
-    setId(builder.id);
+    super(builder.id);
+
     setSku(builder.sku);
     setNom(builder.nom);
     setFamille(builder.famille);
@@ -36,10 +35,6 @@ public class Produit extends AggregateRoot<ProduitId> {
     setAttributsSpecifique(builder.attributsSpecifique);
 
     dateDeCreation = ZonedDateTime.now();
-  }
-
-  public ProduitId id() {
-    return id;
   }
 
   public Sku sku() {
@@ -68,11 +63,6 @@ public class Produit extends AggregateRoot<ProduitId> {
 
   public AttributsSpecifique  attributsSpecifique() {
     return attributsSpecifique;
-  }
-
-  protected void setId(ProduitId id) {
-    this.verifieArgumentNonNull(id, Messages.L_IDENTIFIANT_DU_PRODUIT_EST_REQUIS);
-    this.id = id;
   }
 
   protected void setSku(Sku sku) {

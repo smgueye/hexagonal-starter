@@ -1,6 +1,6 @@
 package web;
 
-import application.ports.in.ForSayingHelloWorld;
+import com.github.app.application.usecases.PourGererLeCatalogue;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -16,7 +16,7 @@ public class SpringBootWebApp {
   }
 
   @Bean
-  public ForSayingHelloWorld helloWorldTeller() {
+  public PourGererLeCatalogue helloWorldTeller() {
     return ForSayingHelloWebUIDriver.helloWorldTeller();
   }
 }

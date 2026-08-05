@@ -1,8 +1,8 @@
 package container;
 
-import application.factory.AppService;
+import com.github.app.application.factory.CatalogueMicroservice;
 
 public class AppInitializer {
 
-  public static void init(AppService app) {}
+  public static void init(CatalogueMicroservice app) {}
 }

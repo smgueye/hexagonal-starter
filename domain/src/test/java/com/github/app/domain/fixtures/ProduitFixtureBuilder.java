@@ -1,4 +1,4 @@
-package common.fixtures;
+package com.github.app.domain.fixtures;
 
 import com.github.app.domain.Produit;
 import com.github.app.domain.ProduitId;
@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 
-public class ProduitFixtureBuilder {
+public final class ProduitFixtureBuilder {
 
   private Produit.Builder produitBuilder = Produit.Builder.builder();
 
