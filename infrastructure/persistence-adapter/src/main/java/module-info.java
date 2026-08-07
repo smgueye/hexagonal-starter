@@ -18,9 +18,9 @@ module persistence.adapter {
   requires domain;
   requires spring.boot.persistence;
   requires spring.boot;
+  requires spring.boot.autoconfigure;
 
-  opens com.github.smgueye.app.persistenceadapter
-    to org.hibernate.orm.core;
+  opens com.github.smgueye.app.persistenceadapter;
 
   exports com.github.smgueye.app.persistenceadapter;
 

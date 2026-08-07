@@ -1,4 +1,4 @@
-package com.github.smgueye.app.persistenceadapter;
+package com.github.smgueye.app.persistenceadapter.unitaire;
 
 import com.github.app.domain.Produit;
 import com.github.app.domain.ProduitId;
@@ -6,6 +6,8 @@ import com.github.app.domain.valueobject.Famille;
 import com.github.app.domain.valueobject.Marque;
 import com.github.app.domain.valueobject.Sku;
 import com.github.app.domain.valueobject.Statut;
+import com.github.smgueye.app.persistenceadapter.EntiteJpaProduit;
+import com.github.smgueye.app.persistenceadapter.MapperDePersistenceProduit;
 import core.lib.Argent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

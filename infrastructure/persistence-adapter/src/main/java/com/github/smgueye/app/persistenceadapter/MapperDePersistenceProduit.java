@@ -22,6 +22,7 @@ public class MapperDePersistenceProduit {
         .prixUnitaire(produit.prixUnitaire().montant())
         .statut(produit.statut().name())
         .attributsSpecifiques(Map.copyOf(versJson(produit.attributsSpecifique())))
+        .creeLe(produit.dateDeCreation().toInstant())
       .build();
   }
 

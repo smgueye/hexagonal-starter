@@ -18,9 +18,9 @@ public class GestionnaireDeProduit implements PourGererLesProduits {
 
   public GestionnaireDeProduit() {}
 
-  public GestionnaireDeProduit(MapperDePersistenceProduit mapperDePersistenceProduit,
+  public GestionnaireDeProduit(MapperDePersistenceProduit mapperDePersistence,
                                RepositoryJpaProduit depotJpa) {
-    this.mapperDePersistenceProduit = mapperDePersistenceProduit;
+    this.mapperDePersistenceProduit = mapperDePersistence;
     this.depotJpa = depotJpa;
   }
 
@@ -35,7 +35,7 @@ public class GestionnaireDeProduit implements PourGererLesProduits {
   }
 
   @Override
-  public void creerUnProduit(Produit produit) {
+  public void enregistrer(Produit produit) {
     depotJpa.save(mapperDePersistenceProduit.versEntiteJpa(produit));
   }
 
@@ -48,7 +48,7 @@ public class GestionnaireDeProduit implements PourGererLesProduits {
   }
 
   @Override
-  public void enregistrer(Produit produit) {
+  public void creerUnProduit(Produit produit) {
     // TODO A SUPPRIMER
   }
 }

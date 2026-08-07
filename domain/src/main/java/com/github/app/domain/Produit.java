@@ -65,6 +65,10 @@ public final class Produit extends AggregateRoot<ProduitId> {
     return attributsSpecifique;
   }
 
+  public ZonedDateTime dateDeCreation() {
+    return dateDeCreation;
+  }
+
   protected void setSku(Sku sku) {
     this.verifieArgumentNonNull(sku, Messages.LE_SKU_DU_PRODUIT_EST_REQUIS);
     this.sku = sku;
@@ -97,6 +101,10 @@ public final class Produit extends AggregateRoot<ProduitId> {
 
   protected void setAttributsSpecifique(AttributsSpecifique  attributsSpecifique) {
     this.attributsSpecifique = attributsSpecifique;
+  }
+
+  protected void setDateDeDerniereMiseAJour(ZonedDateTime dateDeDerniereMiseAJour) {
+    this.dateDeDerniereMiseAJour = dateDeDerniereMiseAJour;
   }
 
   public static final class Builder {
