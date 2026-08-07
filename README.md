@@ -25,3 +25,19 @@ pricing-service/
 ├── architecture-tests/
 ├── acceptance-tests/
 └── test-support/
+
+
+TODO
+Invariant
+---
+SKU unique ;
+prix strictement positif ;
+statut limité à ACTIF ou ARCHIVE ;
+aucun type JPA dans le domaine ;
+aucun identifiant auto-incrémenté ;
+dates stockées avec fu seau horaire.
+
+ArchUnit
+--
+
+./mvnw -pl infrastructure/persistence-adapter -am clean package

@@ -17,6 +17,6 @@ public class SpringBootWebApp {
 
   @Bean
   public PourGererLeCatalogue helloWorldTeller() {
-    return ForSayingHelloWebUIDriver.helloWorldTeller();
+    return WebDriverPourGererLeCatalogue.gestionnaireDeCatalogue();
   }
 }

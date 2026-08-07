@@ -20,11 +20,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.retail.domain</groupId>
-            <artifactId>domain</artifactId>
+            <groupId>com.retail</groupId>
+            <artifactId>domain-test-support</artifactId>
             <version>${project.version}</version>
-            <type>test-jar</type>
-            <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
     </dependencies>

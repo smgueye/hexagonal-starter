@@ -5,7 +5,7 @@ import com.github.app.application.usecases.PourGererLeCatalogue;
 import com.github.app.domain.PourGererLesProduits;
 import core.lib.Adapter;
 import core.lib.Driver;
-import web.ForSayingHelloWebUIDriver;
+import web.WebDriverPourGererLeCatalogue;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,7 +61,7 @@ public class DependencyConfigurator {
   public Driver lookupDriver(Class<PourGererLeCatalogue> driverPortType, CatalogueMicroservice app) {
     String adapterName = adapterSelector.adapterNameForPort(driverPortType);
     if (AdaptorSelector.SPRING_WEB.equals(adapterName)) {
-      return new ForSayingHelloWebUIDriver(app.createurDeProduit());
+      return new WebDriverPourGererLeCatalogue(app.createurDeProduit());
     }
 
     throw new RuntimeException("No driver found for driver port '" + driverPortType.getSimpleName() + "'");

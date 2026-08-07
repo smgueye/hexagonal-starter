@@ -11,11 +11,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping
-public class HelloWorldController {
+public class CatalogueController {
 
   private final PourGererLeCatalogue pourGererLeCatalogue;
 
-  public HelloWorldController(PourGererLeCatalogue pourGererLeCatalogue) {
+  public CatalogueController(PourGererLeCatalogue pourGererLeCatalogue) {
     this.pourGererLeCatalogue = pourGererLeCatalogue;
   }
 

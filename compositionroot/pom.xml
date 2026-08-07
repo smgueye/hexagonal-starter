@@ -9,8 +9,8 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.retail.container</groupId>
-    <artifactId>container</artifactId>
+    <groupId>com.retail.compositionroot</groupId>
+    <artifactId>compositionroot</artifactId>
 
     <properties>
         <runtime.module.path>

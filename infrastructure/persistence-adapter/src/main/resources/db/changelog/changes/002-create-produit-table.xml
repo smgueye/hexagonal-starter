@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+    http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet
+    id="002-create-produit-table"
+    author="mouhamed"
+    dbms="postgresql">
+    <sql>
+      CREATE TABLE catalogue.produit (
+        id                    UUID           PRIMARY KEY,
+        sku                   VARCHAR(50)    NOT NULL,
+        nom                   VARCHAR(200)   NOT NULL,
+        famille               VARCHAR(50)    NOT NULL,
+        marque                VARCHAR(100)   NOT NULL,
+        prix_unitaire         NUMERIC(19, 2) NOT NULL,
+        statut                VARCHAR(20)    NOT NULL,
+        attributs_specifiques JSONB          NOT NULL DEFAULT '{}'::jsonb,
+        version               BIGINT         NOT NULL DEFAULT 0,
+        cree_le               TIMESTAMPTZ    NOT NULL,
+        modifie_le            TIMESTAMPTZ,
+
+        CONSTRAINT uk_produit_sku UNIQUE (sku),
+        CONSTRAINT ck_produit_prix_positif CHECK (prix_unitaire &gt; 0),
+        CONSTRAINT ck_produit_statut CHECK (statut IN ('ACTIF', 'ARCHIVE')));
+      </sql>
+
+      <rollback>
+        <sql>DROP TABLE catalogue.produit;</sql>
+      </rollback>
+    </changeSet>
+</databaseChangeLog>

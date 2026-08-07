@@ -2,6 +2,8 @@ package com.github.app.domain.valueobject.attributsspecifiques;
 
 import core.lib.ValueObject;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,4 +20,8 @@ public final class AttributsSpecifique extends ValueObject {
   }
 
   // TODO - Equals & Hash
+
+  public Collection<Attribut> tous() {
+    return List.copyOf(attributs.values());
+  }
 }

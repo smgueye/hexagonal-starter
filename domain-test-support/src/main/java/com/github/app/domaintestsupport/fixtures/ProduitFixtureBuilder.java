@@ -1,4 +1,4 @@
-package com.github.app.domain.fixtures;
+package com.github.app.domaintestsupport.fixtures;
 
 import com.github.app.domain.Produit;
 import com.github.app.domain.ProduitId;

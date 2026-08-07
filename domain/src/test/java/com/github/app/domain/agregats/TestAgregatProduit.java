@@ -11,7 +11,6 @@ import com.github.app.domain.valueobject.attributsspecifiques.Attribut;
 import com.github.app.domain.valueobject.attributsspecifiques.AttributsSpecifique;
 import com.github.app.domain.valueobject.attributsspecifiques.Numerique;
 import com.github.app.domain.valueobject.attributsspecifiques.Texte;
-import com.github.app.domain.fixtures.ProduitFixtureBuilder;
 import core.lib.Argent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -30,41 +29,18 @@ public class TestAgregatProduit {
   @Test
   @DisplayName("Lorsque les informations sont valides")
   public void creer_une_instance_de_produit() {
-    // Given
-    ProduitId id = new ProduitId(UUID.fromString("54b485e1-f3f7-45ed-b971-4ce18c32da7a"));
-    Sku unSku = new Sku("TRN-PRC-500W");
-    String unNom = "Perceuse sans fil 500W";
-    Famille uneFamille = Famille.OUTILLAGE;
-    Marque uneMarque = new Marque("Bosch");
-    Argent unPrixUnitaire = new Argent(new BigDecimal("89.90"));
-    Statut unStatut = Statut.ACTIF;
-    AttributsSpecifique attributs = new AttributsSpecifique(Map.of(
-    "puissance", new Attribut("puissance", new Texte("500w")),
-    "poids", new Attribut("poids", new Numerique(1.8)),
-    "unite", new Attribut("unite", new Texte("KG"))));
-
-    // When
-    Produit produit = Produit.Builder
-      .builder()
-      .avecId(id)
-      .avecSku(unSku)
-      .avecNom(unNom)
-      .avecFamille(uneFamille)
-      .avecMarque(uneMarque)
-      .avecPrixUnitaire(unPrixUnitaire)
-      .avecStatut(unStatut)
-      .avecAttributsSpecifique(attributs)
-      .build();
+    Produit produit = unProduitBuilder().build();
 
     // Assert
-    assertThat(produit).satisfies(
-      (p) -> assertThat(p.id()).isEqualTo(id),
-      (p) -> assertThat(produit.sku()).isEqualTo(unSku),
-      (p) -> assertThat(produit.nom()).isEqualTo(unNom),
-      (p) -> assertThat(produit.famille()).isEqualTo(uneFamille),
-      (p) ->  assertThat(produit.marque()).isEqualTo(uneMarque),
-      (p) -> assertThat(produit.prixUnitaire()).isEqualTo(unPrixUnitaire),
-      (p) ->  assertThat(produit.statut()).isEqualTo(unStatut));
+    assertThat(produit)
+      .satisfies(
+      p -> assertThat(p.id()).isEqualTo(new ProduitId(UUID.fromString("54b485e1-f3f7-45ed-b971-4ce18c32da7a"))),
+      p -> assertThat(produit.sku()).isEqualTo(new Sku("TRN-PRC-500W")),
+      p -> assertThat(produit.nom()).isEqualTo("Perceuse sans fil 500W"),
+      p -> assertThat(produit.famille()).isEqualTo(Famille.OUTILLAGE),
+      p ->  assertThat(produit.marque()).isEqualTo(new Marque("Bosch")),
+      p -> assertThat(produit.prixUnitaire()).isEqualTo(new Argent(new BigDecimal("89.90"))),
+      p ->  assertThat(produit.statut()).isEqualTo(Statut.ACTIF));
 
     assertAttribut(produit.attributsSpecifique(), "puissance", new Texte("500w"));
     assertAttribut(produit.attributsSpecifique(), "poids", new Numerique(1.8));
@@ -91,7 +67,9 @@ public class TestAgregatProduit {
     @DisplayName("Lorsque l'identifiant n'est pas renseigné.")
     void refuse_un_identifiant_absent() {
       assertThatThrownBy(() -> {
-        ProduitFixtureBuilder.unBuilderAvecDonneesValides().avecId(null).build();
+        unProduitBuilder()
+          .avecId(null)
+          .build();
       })
           .as("La création d'un produit sans identifiant est refusée.")
           .isInstanceOf(IllegalArgumentException.class)
@@ -102,7 +80,7 @@ public class TestAgregatProduit {
     @DisplayName("Lorsque le sku n'est pas renseigné.")
     void refuse_un_sku_absent() {
       assertThatThrownBy(() -> {
-        ProduitFixtureBuilder.unBuilderAvecDonneesValides().avecSku(null).build();
+        unProduitBuilder().avecSku(null).build();
       })
           .as("La création d'un produit sans sku est refusée.")
           .isInstanceOf(IllegalArgumentException.class)
@@ -113,7 +91,9 @@ public class TestAgregatProduit {
     @DisplayName("Lorsque le nom n'est pas renseigné.")
     void refuse_un_nom_vide() {
       assertThatThrownBy(() -> {
-        ProduitFixtureBuilder.unBuilderAvecDonneesValides().avecNom("").build();
+        unProduitBuilder()
+          .avecNom("")
+          .build();
       })
           .as("La création d'un produit sans nom est refusée.")
           .isInstanceOf(IllegalArgumentException.class)
@@ -124,7 +104,9 @@ public class TestAgregatProduit {
     @DisplayName("Lorsque la famille n'est pas renseignée.")
     void refuse_une_famille_absente() {
       assertThatThrownBy(() -> {
-        ProduitFixtureBuilder.unBuilderAvecDonneesValides().avecFamille(null).build();
+        unProduitBuilder()
+          .avecFamille(null)
+          .build();
       })
           .as("La création d'un produit sans identifiant est refusée.")
           .isInstanceOf(IllegalArgumentException.class)
@@ -135,7 +117,9 @@ public class TestAgregatProduit {
     @DisplayName("Lorsque la marque n'est pas renseignée.")
     void refuse_une_marque_absente() {
       assertThatThrownBy(() -> {
-        ProduitFixtureBuilder.unBuilderAvecDonneesValides().avecMarque(null).build();
+        unProduitBuilder()
+          .avecMarque(null)
+          .build();
       })
           .as("La création d'un produit sans marque est refusée.")
           .isInstanceOf(IllegalArgumentException.class)
@@ -146,7 +130,9 @@ public class TestAgregatProduit {
     @DisplayName("Lorsque le prix n'est pas renseigné.")
     void refuse_un_prix_absent() {
       assertThatThrownBy(() -> {
-        ProduitFixtureBuilder.unBuilderAvecDonneesValides().avecPrixUnitaire(null).build();
+        unProduitBuilder()
+          .avecPrixUnitaire(null)
+          .build();
       })
           .as("La création d'un produit sans prix est refusée.")
           .isInstanceOf(IllegalArgumentException.class)
@@ -157,8 +143,7 @@ public class TestAgregatProduit {
     @DisplayName("Lorsque le statut n'est pas renseigné.")
     void refuse_un_statut_absent() {
       assertThatThrownBy(() -> {
-        ProduitFixtureBuilder
-          .unBuilderAvecDonneesValides()
+        unProduitBuilder()
           .avecStatut(null)
           .build();
       })
@@ -166,5 +151,21 @@ public class TestAgregatProduit {
           .isInstanceOf(IllegalArgumentException.class)
           .hasMessage(Messages.LE_STATUT_DU_PRODUIT_EST_REQUIS);
     }
+  }
+
+  private Produit.Builder unProduitBuilder() {
+    return Produit.Builder
+        .builder()
+        .avecId(new ProduitId(UUID.fromString("54b485e1-f3f7-45ed-b971-4ce18c32da7a")))
+        .avecSku(new Sku("TRN-PRC-500W"))
+        .avecNom("Perceuse sans fil 500W")
+        .avecFamille(Famille.OUTILLAGE)
+        .avecMarque(new Marque("Bosch"))
+        .avecPrixUnitaire(new Argent(new BigDecimal("89.90")))
+        .avecStatut(Statut.ACTIF)
+        .avecAttributsSpecifique(new AttributsSpecifique(Map.of(
+            "puissance", new Attribut("puissance", new Texte("500w")),
+            "poids", new Attribut("poids", new Numerique(1.8)),
+            "unite", new Attribut("unite", new Texte("KG")))));
   }
 }

@@ -7,10 +7,10 @@ import com.github.app.application.fakes.ProduitEnMemoire;
 import com.github.app.application.resultats.ProduitCree;
 import com.github.app.application.usecases.CreationDeProduit;
 import com.github.app.domain.Produit;
-import com.github.app.domain.fixtures.ProduitFixtureBuilder;
 import com.github.app.domain.valueobject.Famille;
 import com.github.app.domain.valueobject.Marque;
 import com.github.app.domain.valueobject.Statut;
+import com.github.app.domaintestsupport.fixtures.ProduitFixtureBuilder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -37,10 +37,11 @@ public class TestCreationDeProduit {
     ProduitCree produitCree = creationDeProduit.creerUnProduit(commande);
 
     // Then
-    assertThat(produitCree).satisfies(
-      (p) -> assertThat(p.id()).isNotNull(),
-      (p) -> assertThat(p.sku().valeur()).isEqualTo(commande.sku()),
-      (p) -> assertThat(p.statut()).isEqualTo(Statut.ACTIF));
+    assertThat(produitCree)
+      .satisfies(
+      p -> assertThat(p.id()).isNotNull(),
+      p -> assertThat(p.sku().valeur()).isEqualTo(commande.sku()),
+      p -> assertThat(p.statut()).isEqualTo(Statut.ACTIF));
   }
 
   protected CreationDeProduitCommand obtenirUneCommandeValide(String uneFamille) {
