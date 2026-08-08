@@ -19,6 +19,7 @@ module persistence.adapter {
   requires spring.boot.persistence;
   requires spring.boot;
   requires spring.boot.autoconfigure;
+  requires spring.tx;
 
   opens com.github.smgueye.app.persistenceadapter;
 

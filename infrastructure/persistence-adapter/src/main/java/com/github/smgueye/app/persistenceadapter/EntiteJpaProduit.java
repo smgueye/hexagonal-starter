@@ -82,6 +82,10 @@ public class EntiteJpaProduit implements Serializable {
     return statut;
   }
 
+  public Map<String, AttributJson> attributsSpecifiques() {
+    return attributsSpecifiques;
+  }
+
   public Instant creeLe() {
     return creeLe;
   }
