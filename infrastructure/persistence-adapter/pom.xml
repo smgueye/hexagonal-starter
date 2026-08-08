@@ -19,9 +19,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.retail.application</groupId>
-      <artifactId>application</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <groupId>com.retail.domain</groupId>
+      <artifactId>domain</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>

@@ -11,7 +11,7 @@ public enum Famille {
   BRICOLAGE("Bricolage"),
   JARDIN("Jardin"),
   DECORATION("Decoration"),
-  ELECTROMENAGER("Electromagner"),
+  ELECTROMENAGER("Electroménager"),
   QUINCAILLERIE("Quincaillerie");
 
   public static final Map<String, Famille> PAR_TYPE =

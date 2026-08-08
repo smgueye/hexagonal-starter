@@ -37,6 +37,7 @@ aucun type JPA dans le domaine ;
 aucun identifiant auto-incrémenté ;
 dates stockées avec fu seau horaire.
 
+TODO : Test optimistic
 ArchUnit
 --
 

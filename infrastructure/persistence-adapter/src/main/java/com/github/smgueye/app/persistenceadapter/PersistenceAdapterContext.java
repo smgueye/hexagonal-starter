@@ -14,7 +14,7 @@ public class PersistenceAdapterContext implements AutoCloseable{
   }
 
   public static PersistenceAdapterContext demarrer(){
-    ConfigurableApplicationContext context = new SpringApplicationBuilder(PersistenceAdapterContext.class)
+    ConfigurableApplicationContext context = new SpringApplicationBuilder(PersistenceAdapterConfig.class)
       .web(WebApplicationType.NONE)
       .properties("spring.config.name=persistence-adapter") // pour que les config soient indépendqntes
       .run();

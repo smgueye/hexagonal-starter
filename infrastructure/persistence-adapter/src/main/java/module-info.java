@@ -1,5 +1,5 @@
-import com.github.app.domain.PourGererLesProduits;
-import com.github.smgueye.app.persistenceadapter.GestionnaireDeProduit;
+import com.github.smgueye.app.persistenceadapter.PostgresProvider;
+import core.lib.AdapterProvider;
 
 module persistence.adapter {
   requires org.hibernate.orm.core;
@@ -20,10 +20,11 @@ module persistence.adapter {
   requires spring.boot;
   requires spring.boot.autoconfigure;
   requires spring.tx;
+  requires org.jspecify;
 
   opens com.github.smgueye.app.persistenceadapter;
 
   exports com.github.smgueye.app.persistenceadapter;
 
-  provides PourGererLesProduits with GestionnaireDeProduit;
+  provides AdapterProvider with PostgresProvider;
 }

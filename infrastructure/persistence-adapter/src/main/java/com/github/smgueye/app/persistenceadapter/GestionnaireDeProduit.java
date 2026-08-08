@@ -10,7 +10,6 @@ import com.github.app.domain.PourGererLesProduits;
 import java.util.Optional;
 import java.util.UUID;
 
-@Adapter(name = "postgres-adapter")
 public class GestionnaireDeProduit implements PourGererLesProduits {
 
   private MapperDePersistenceProduit mapperDePersistenceProduit;
@@ -41,10 +40,7 @@ public class GestionnaireDeProduit implements PourGererLesProduits {
 
   @Override
   public Optional<Produit> rechercherUnProduitParId(ProduitId produitId) {
-   // Optional<EntiteJpaProduit> resultatRechercheParId = depotJpa.findById(produitId.value());
-    //if (resultatRechercheParId.isEmpty())
-      return Optional.empty();
-    //return Optional.ofNullable();
+    return depotJpa.findById(produitId.value()).map(mapperDePersistenceProduit::versProduit);
   }
 
   @Override

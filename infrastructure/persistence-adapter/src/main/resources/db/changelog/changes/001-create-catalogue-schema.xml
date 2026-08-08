@@ -12,7 +12,7 @@
     author="mouhamed"
     dbms="postgresql">
 
-    <sql>CREATE SCHEMA catalogue;</sql>
+    <sql>CREATE SCHEMA IF NOT EXISTS catalogue;</sql>
 
     <rollback>
       <sql>DROP SCHEMA catalogue;</sql>

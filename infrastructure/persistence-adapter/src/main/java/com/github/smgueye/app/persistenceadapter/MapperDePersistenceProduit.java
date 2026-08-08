@@ -1,7 +1,13 @@
 package com.github.smgueye.app.persistenceadapter;
 
 import com.github.app.domain.Produit;
+import com.github.app.domain.ProduitId;
+import com.github.app.domain.valueobject.Famille;
+import com.github.app.domain.valueobject.Marque;
+import com.github.app.domain.valueobject.Sku;
+import com.github.app.domain.valueobject.Statut;
 import com.github.app.domain.valueobject.attributsspecifiques.*;
+import core.lib.Argent;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -42,5 +48,19 @@ public class MapperDePersistenceProduit {
       case Numerique numerique -> AttributJson.numerique(numerique.valeur());
       case Booleen booleen -> AttributJson.booleen(booleen.valeur());
     };
+  }
+
+  public Produit versProduit(EntiteJpaProduit entite) {
+    return Produit.Builder.builder()
+        .avecId(new ProduitId(entite.id()))
+        .avecSku(new Sku(entite.sku()))
+        .avecNom(entite.nom())
+        .avecFamille(Famille.chercherParType(entite.famille()).orElseThrow())
+        .avecMarque(new Marque(entite.marque()))
+        .avecPrixUnitaire(new Argent(entite.prixUnitaire()))
+        .avecStatut(Statut.chercherParType(entite.statut()).orElseThrow())
+        // TODO .avecAttributsSpecifique(entite.attributsSpecifiques())
+        // TODO .
+        .build();
   }
 }

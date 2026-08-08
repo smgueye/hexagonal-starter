@@ -51,7 +51,7 @@ public class SchemaCatalogueIT {
         INSERT INTO catalogue.produits (id, sku, nom, famille, marque, prix_unitaire, statut, 
                                         attributs_specifiques, version, cree_le)
         VALUES (?, ?, ?, ?, ?, ?, ?, '{}'::jsonb, ?, now())""",
-        id, sku, "Produit test", "TEST", "TEST", -10, "ACTIF", 0 )
+        id, sku, "Produit test", "TEST", "TEST", -10, "ACTIF", 0)
     ).isInstanceOf(DataIntegrityViolationException.class);
   }
 

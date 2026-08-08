@@ -12,7 +12,7 @@
     author="mouhamed"
     dbms="postgresql">
     <sql>
-      CREATE TABLE catalogue.produits (
+      CREATE TABLE IF NOT EXISTS catalogue.produits (
         id                    UUID           PRIMARY KEY,
         sku                   VARCHAR(50)    NOT NULL,
         nom                   VARCHAR(200)   NOT NULL,
