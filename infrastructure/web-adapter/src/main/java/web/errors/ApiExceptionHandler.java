@@ -24,10 +24,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     List<ErreurChamp> erreurs = exception.getBindingResult()
       .getFieldErrors()
       .stream()
-      .map(error -> new ErreurChamp(
-        error.getField(),
-        error.getDefaultMessage()
-      ))
+      .map(error -> {
+        String codeErreur = ValidationCodeErreur.chercherParCodeContrainte(error.getCode()).name();
+        return new ErreurChamp(
+          error.getField(),
+          codeErreur,
+          error.getDefaultMessage()
+        );
+      })
       .toList();
 
     ProblemDetail probleme = ProblemDetail.forStatusAndDetail(status, "Un ou plusieurs champs sont invalides.");

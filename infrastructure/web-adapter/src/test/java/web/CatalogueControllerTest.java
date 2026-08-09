@@ -10,9 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import web.errors.ValidationCodeErreur;
 
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -49,7 +49,8 @@ public class CatalogueControllerTest {
           .andExpect(status().isBadRequest())
           .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
           .andExpect(jsonPath("$.title").value("Requête invalide"))
-          .andExpect(jsonPath("$.erreurs[0].field").value("sku"));
+          .andExpect(jsonPath("$.erreurs[0].field").value("sku"))
+          .andExpect(jsonPath("$.erreurs[0].code").value(ValidationCodeErreur.REQUIRED));
       verifyNoInteractions(gestionnaireDeProduits);
     }
 
@@ -70,7 +71,8 @@ public class CatalogueControllerTest {
         .andExpect(status().isBadRequest())
         .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
         .andExpect(jsonPath("$.title").value("Requête invalide"))
-        .andExpect(jsonPath("$.erreurs[0].field").value("famille"));;
+        .andExpect(jsonPath("$.erreurs[0].field").value("famille"))
+        .andExpect(jsonPath("$.erreurs[0].code").value(ValidationCodeErreur.INVALID_ENUM));
       verifyNoInteractions(gestionnaireDeProduits);
     }
 
@@ -89,8 +91,11 @@ public class CatalogueControllerTest {
             }"""))
           .andExpect(status().isBadRequest())
           .andExpect(jsonPath("$.erreurs").value(hasSize(3)))
-          .andExpect(jsonPath("$.erreurs[*].field").value(
-            hasItems("sku", "famille", "prixUnitaire")));
+          .andExpect(jsonPath("$.erreurs[*].field").value(hasItems("sku", "famille", "prixUnitaire")))
+          .andExpect(jsonPath("$.erreurs[?(@.field == 'sku')].code").value(hasItem(ValidationCodeErreur.REQUIRED.name())))
+          .andExpect(jsonPath("$.erreurs[?(@.field == 'famille')].code").value(hasItem(ValidationCodeErreur.INVALID_ENUM.name())))
+          .andExpect(jsonPath("$.erreurs[?(@.field == 'prixUnitaire')].code").value(hasItem(ValidationCodeErreur.MUST_BE_POSITIVE.name())))
+      ;
 
       verifyNoInteractions(gestionnaireDeProduits);
     }
