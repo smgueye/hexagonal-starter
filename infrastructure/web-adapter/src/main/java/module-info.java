@@ -5,6 +5,8 @@ open module web.adapter {
   requires spring.boot;
   requires spring.context;
   requires spring.web;
+  requires jakarta.validation;
+  requires domain;
 
   exports web;
 }

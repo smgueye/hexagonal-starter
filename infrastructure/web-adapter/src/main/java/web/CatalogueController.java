@@ -1,7 +1,9 @@
 package web;
 
 import com.github.app.application.usecases.PourGererLeCatalogue;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping
+@RequestMapping("catalogue/produits")
 public class CatalogueController {
 
   private final PourGererLeCatalogue pourGererLeCatalogue;
@@ -19,8 +21,8 @@ public class CatalogueController {
     this.pourGererLeCatalogue = pourGererLeCatalogue;
   }
 
-  @RequestMapping(value = "hello", method = RequestMethod.GET)
-  public ResponseEntity<Map<String, String>> sayHello() {
+  @RequestMapping(method = RequestMethod.POST)
+  public ResponseEntity<Map<String, String>> create(@Valid @RequestBody CreerProduitRequest request) {
     // TODO
 
     return ResponseEntity.of(Optional.of(Map.of("k", "Hello World")));

@@ -1,0 +1,26 @@
+package web.validation;
+
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+@Documented
+@Target({FIELD, PARAMETER, RECORD_COMPONENT})
+@Retention(RUNTIME)
+@Constraint(validatedBy = ValeurEnumValidator.class)
+public @interface ValeurEnum {
+
+  String message() default "La valeur n'est pas authorisee.";
+
+  Class<?>[] groups() default {};
+
+  Class<? extends Payload>[] payload() default {};
+
+  Class<? extends Enum<?>> value();
+}
