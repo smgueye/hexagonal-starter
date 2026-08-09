@@ -11,10 +11,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("Catalogue Controller")
 @WebMvcTest(CatalogueController.class)
@@ -33,7 +35,7 @@ public class CatalogueControllerTest {
 
     @Test
     public void refuser_la_creation_avec_un_sku_invalide() throws Exception {
-      mockMvc.perform(post("/catalogue/produits")
+      mockMvc.perform(post("/catalogue/v1/produits")
         .contentType(MediaType.APPLICATION_JSON)
         .content("""
           {
@@ -45,13 +47,15 @@ public class CatalogueControllerTest {
             "attributsSpecifiques": { "puissance": "500W", "poidsKg": 1.8 }
           }"""))
           .andExpect(status().isBadRequest())
-          .andDo(print());
+          .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+          .andExpect(jsonPath("$.title").value("Requête invalide"))
+          .andExpect(jsonPath("$.erreurs[0].field").value("sku"));
       verifyNoInteractions(gestionnaireDeProduits);
     }
 
     @Test
     public void refuser_la_creation_avec_une_famille_invalide() throws Exception {
-      mockMvc.perform(post("/catalogue/produits")
+      mockMvc.perform(post("/catalogue/v1/produits")
       .contentType(MediaType.APPLICATION_JSON)
       .content("""
         {
@@ -62,7 +66,32 @@ public class CatalogueControllerTest {
           "prixUnitaire": 89.90,
           "attributsSpecifiques": { "puissance": "500W", "poidsKg": 1.8 }
         }"""))
-        .andExpect(status().isBadRequest()).andDo(print());
+        .andExpect(status().isBadRequest())
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+        .andExpect(jsonPath("$.title").value("Requête invalide"))
+        .andExpect(jsonPath("$.erreurs[0].field").value("famille"));;
+      verifyNoInteractions(gestionnaireDeProduits);
+    }
+
+    @Test
+    public void retourner_toutes_les_erreurs_de_validation() throws Exception {
+      mockMvc.perform(
+        post("/catalogue/v1/produits")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+            {
+              "sku": "",
+              "nom": "Perceuse",
+              "famille": "INFORMATIQUE",
+              "marque": "Bosch",
+              "prixUnitaire": -10
+            }"""))
+          .andExpect(status().isBadRequest())
+          .andExpect(jsonPath("$.erreurs").value(hasSize(3)))
+          .andExpect(jsonPath("$.erreurs[*].field").value(
+            hasItems("sku", "famille", "prixUnitaire")));
+
       verifyNoInteractions(gestionnaireDeProduits);
     }
   }

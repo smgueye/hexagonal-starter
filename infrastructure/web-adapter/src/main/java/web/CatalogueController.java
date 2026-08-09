@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("catalogue/produits")
+@RequestMapping("catalogue/v1/produits")
 public class CatalogueController {
 
   private final PourGererLeCatalogue pourGererLeCatalogue;

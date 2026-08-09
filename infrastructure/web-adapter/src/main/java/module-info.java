@@ -8,6 +8,7 @@ open module web.adapter {
   requires jakarta.validation;
   requires domain;
   requires spring.webmvc;
+  requires org.jspecify;
 
   exports web;
 }
