@@ -10,6 +10,11 @@ spring:
       connection-timeout: 3000 # pk ?
 
   jpa:
+    properties:
+      jakarta:
+        persistence:
+          validation:
+            mode: none
     hibernate:
       ddl-auto: validate
       properties:

@@ -9,6 +9,9 @@ open module web.adapter {
   requires domain;
   requires spring.webmvc;
   requires org.jspecify;
+  requires io.swagger.v3.oas.annotations;
+  requires org.slf4j;
+  requires org.apache.tomcat.embed.core;
 
   exports web;
 }

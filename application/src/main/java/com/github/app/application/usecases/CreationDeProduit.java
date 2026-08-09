@@ -2,7 +2,9 @@ package com.github.app.application.usecases;
 
 import com.github.app.application.Messages;
 import com.github.app.application.commandes.CreationDeProduitCommand;
+import com.github.app.application.exceptions.ExceptionFamilleNonTrouve;
 import com.github.app.application.exceptions.ExceptionMetier;
+import com.github.app.application.exceptions.ExceptionSkuDejaPresent;
 import com.github.app.application.resultats.ProduitCree;
 import com.github.app.domain.PourGererLesProduits;
 import com.github.app.domain.Produit;
@@ -15,6 +17,8 @@ import com.github.app.domain.valueobject.attributsspecifiques.AttributsSpecifiqu
 import com.github.app.domain.valueobject.attributsspecifiques.Texte;
 import core.lib.Argent;
 import core.lib.UseCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +27,8 @@ import java.util.Optional;
 @UseCase(code = "UC1")
 public final class CreationDeProduit implements PourGererLeCatalogue {
 
+  private static final Logger LOG = LoggerFactory.getLogger(CreationDeProduit.class);
+
   private final PourGererLesProduits pourGererLesProduits;
 
   public CreationDeProduit(PourGererLesProduits pourGererLesProduits) {
@@ -30,14 +36,15 @@ public final class CreationDeProduit implements PourGererLeCatalogue {
   }
 
   @Override
-  public ProduitCree creerUnProduit(CreationDeProduitCommand commande) {
-    Optional<Famille> resultat = Famille.chercherParType(commande.famille());
+  public ProduitCree creerUnProduit(CreationDeProduitCommand commande) throws ExceptionSkuDejaPresent {
+    Optional<Famille> resultat = Famille.chercherParNom(commande.famille());
     if (resultat.isEmpty()) {
-      throw new ExceptionMetier(Messages.LA_FAMILLE_PAS_RECONNUE);
+      throw new ExceptionFamilleNonTrouve(commande.famille());
     }
+
     Sku sku = new Sku(commande.sku());
     if (pourGererLesProduits.existeAvecUnSku(sku))
-      throw new ExceptionMetier(Messages.LE_SKU_DEJA_UTILISE);
+      throw new ExceptionSkuDejaPresent(Messages.LE_SKU_DEJA_UTILISE);
 
     Produit produit = Produit.Builder
       .builder()
@@ -49,11 +56,13 @@ public final class CreationDeProduit implements PourGererLeCatalogue {
         .avecPrixUnitaire(new Argent(commande.prixUnitaire()))
         .avecStatut(Statut.ACTIF)
         .avecAttributsSpecifique(enSpecificationsProduit(commande.attributsSpecifiques()))
-        .build();
+      .build();
 
     pourGererLesProduits.enregistrer(produit);
 
-    return new ProduitCree(produit.id(), produit.sku(), produit.statut());
+    var produitCree = new ProduitCree(produit.id(), produit.sku(), produit.statut());
+    LOG.info("Produit créé application={}", produitCree);
+    return produitCree;
   }
 
   private AttributsSpecifique enSpecificationsProduit(Map<String, Map<String, String>> specs) {

@@ -2,7 +2,9 @@ package com.github.app.application.casutilisations;
 
 import com.github.app.application.Messages;
 import com.github.app.application.commandes.CreationDeProduitCommand;
+import com.github.app.application.exceptions.ExceptionFamilleNonTrouve;
 import com.github.app.application.exceptions.ExceptionMetier;
+import com.github.app.application.exceptions.ExceptionSkuDejaPresent;
 import com.github.app.application.fakes.ProduitEnMemoire;
 import com.github.app.application.resultats.ProduitCree;
 import com.github.app.application.usecases.CreationDeProduit;
@@ -29,7 +31,7 @@ public class TestCreationDeProduit {
 
   @Test
   @DisplayName("Happy path")
-  public void the_happy_path() {
+  public void the_happy_path() throws ExceptionSkuDejaPresent {
     // Given
     CreationDeProduitCommand commande = obtenirUneCommandeValide(null);
 
@@ -39,9 +41,9 @@ public class TestCreationDeProduit {
     // Then
     assertThat(produitCree)
       .satisfies(
-      p -> assertThat(p.id()).isNotNull(),
-      p -> assertThat(p.sku().valeur()).isEqualTo(commande.sku()),
-      p -> assertThat(p.statut()).isEqualTo(Statut.ACTIF));
+        p -> assertThat(p.id()).isNotNull(),
+        p -> assertThat(p.sku().valeur()).isEqualTo(commande.sku()),
+        p -> assertThat(p.statut()).isEqualTo(Statut.ACTIF));
   }
 
   protected CreationDeProduitCommand obtenirUneCommandeValide(String uneFamille) {
@@ -74,8 +76,7 @@ public class TestCreationDeProduit {
         creationDeProduit.creerUnProduit(obtenirUneCommandeValide("XXX"));
       })
           .as("La création d'un produit avec une famille inexistante est refusée.")
-          .isInstanceOf(ExceptionMetier.class)
-          .hasMessage(Messages.LA_FAMILLE_PAS_RECONNUE);
+          .isInstanceOf(ExceptionFamilleNonTrouve.class);
     }
 
     @Test
@@ -95,8 +96,7 @@ public class TestCreationDeProduit {
         creationDeProduit.creerUnProduit(obtenirUneCommandeValide(null));
       })
         .as("La création d'un produit avec un sku déjà utilisé est refusée.")
-        .isInstanceOf(ExceptionMetier.class)
-        .hasMessage(Messages.LE_SKU_DEJA_UTILISE);
+        .isInstanceOf(ExceptionSkuDejaPresent.class);
     }
   }
 }

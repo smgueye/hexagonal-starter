@@ -42,3 +42,5 @@ ArchUnit
 --
 
 ./mvnw -pl infrastructure/persistence-adapter -am clean package
+
+EXPLIQUER ... EXPLIQUER DANS LES MOINDRE DETAILS TOUT CE BORDEL

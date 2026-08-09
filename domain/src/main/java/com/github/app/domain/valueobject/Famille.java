@@ -11,7 +11,7 @@ public enum Famille {
   BRICOLAGE("Bricolage"),
   JARDIN("Jardin"),
   DECORATION("Decoration"),
-  ELECTROMENAGER("Electroménager"),
+  ELECTROMENAGER("Électroménager"),
   QUINCAILLERIE("Quincaillerie");
 
   public static final Map<String, Famille> PAR_TYPE =
@@ -19,6 +19,14 @@ public enum Famille {
       .stream(Famille.values())
       .collect(Collectors.toUnmodifiableMap(
         Famille::type,
+        Function.identity()
+      ));
+
+  public static final Map<String, Famille> PAR_NOM =
+    Arrays
+      .stream(Famille.values())
+      .collect(Collectors.toUnmodifiableMap(
+        Famille::name,
         Function.identity()
       ));
 
@@ -34,5 +42,9 @@ public enum Famille {
 
   public static Optional<Famille> chercherParType(String unType) {
     return Optional.ofNullable(PAR_TYPE.get(unType));
+  }
+
+  public static Optional<Famille> chercherParNom(String unNom) {
+    return Optional.ofNullable(PAR_NOM.get(unNom.toUpperCase()));
   }
 }

@@ -1,30 +1,41 @@
 package web;
 
+import com.github.app.application.commandes.CreationDeProduitCommand;
+import com.github.app.application.exceptions.ExceptionSkuDejaPresent;
+import com.github.app.application.resultats.ProduitCree;
 import com.github.app.application.usecases.PourGererLeCatalogue;
-import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
-import java.util.Optional;
+import web.api.CatalogueApi;
+import web.errors.ApiExceptionHandler;
 
 @RestController
-@RequestMapping("catalogue/v1/produits")
-public class CatalogueController {
+public class CatalogueController implements CatalogueApi {
 
-  private final PourGererLeCatalogue pourGererLeCatalogue;
+  private static final Logger LOG = LoggerFactory.getLogger(CatalogueController.class);
 
-  public CatalogueController(PourGererLeCatalogue pourGererLeCatalogue) {
-    this.pourGererLeCatalogue = pourGererLeCatalogue;
+  private final PourGererLeCatalogue gestionnaireDeCatalogue;
+
+  public CatalogueController(PourGererLeCatalogue gestionnaireDeCatalogue) {
+    this.gestionnaireDeCatalogue = gestionnaireDeCatalogue;
   }
 
-  @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<Map<String, String>> create(@Valid @RequestBody CreerProduitRequest request) {
-    // TODO
-
-    return ResponseEntity.of(Optional.of(Map.of("k", "Hello World")));
+  @Override
+  public ResponseEntity<ReponseProduitCree> creerUnProduit(CreerProduitRequest request) throws ExceptionSkuDejaPresent {
+    ProduitCree produitCree = gestionnaireDeCatalogue.creerUnProduit(new CreationDeProduitCommand(
+        request.sku(),
+        request.nom(),
+        request.famille(),
+        request.marque(),
+        request.prixUnitaire(),
+        request.attributsSpecifiques()));
+    var response = new ReponseProduitCree(produitCree.id().value(), produitCree.sku().valeur(), produitCree.statut().type());
+    LOG.info("Réponse HTTP={}", response);
+    return ResponseEntity
+      .status(HttpStatus.CREATED)
+      .body(response);
   }
 }
