@@ -7,6 +7,7 @@ open module web.adapter {
   requires spring.web;
   requires jakarta.validation;
   requires domain;
+  requires spring.webmvc;
 
   exports web;
 }

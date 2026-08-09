@@ -13,6 +13,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("Catalogue Controller")
@@ -43,7 +44,8 @@ public class CatalogueControllerTest {
             "prixUnitaire": 89.90,
             "attributsSpecifiques": { "puissance": "500W", "poidsKg": 1.8 }
           }"""))
-          .andExpect(status().isBadRequest());
+          .andExpect(status().isBadRequest())
+          .andDo(print());
       verifyNoInteractions(gestionnaireDeProduits);
     }
 
@@ -60,7 +62,7 @@ public class CatalogueControllerTest {
           "prixUnitaire": 89.90,
           "attributsSpecifiques": { "puissance": "500W", "poidsKg": 1.8 }
         }"""))
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isBadRequest()).andDo(print());
       verifyNoInteractions(gestionnaireDeProduits);
     }
   }
