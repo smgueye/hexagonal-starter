@@ -2,6 +2,8 @@ open module web.adapter {
   requires core;
   requires application;
   requires spring.boot.autoconfigure;
+  requires spring.boot.actuator;
+  requires spring.boot.actuator.autoconfigure;
   requires spring.boot;
   requires spring.context;
   requires spring.web;

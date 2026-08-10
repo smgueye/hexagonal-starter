@@ -1,7 +1,7 @@
 package web.errors;
 
-import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +19,8 @@ import java.net.URI;
 import java.util.List;
 
 import com.github.app.application.exceptions.ExceptionSkuDejaPresent;
+import web.validation.SkuDejaPresentProblemDetail;
+import web.validation.ValidationProblemDetail;
 
 
 @RestControllerAdvice
@@ -51,10 +53,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(
-    HttpMessageNotReadableException exception,
-    HttpHeaders headers,
-    HttpStatusCode status,
-    WebRequest request) {
+      HttpMessageNotReadableException exception,
+      @NonNull HttpHeaders headers,
+      @NonNull HttpStatusCode status,
+      @NonNull WebRequest request) {
     HttpServletRequest httpRequest = ((ServletWebRequest) request).getRequest();
     LOG.warn("Requête HTTP invalide method={} path={} cause={}",
       httpRequest.getMethod(),
@@ -84,17 +86,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     ProblemDetail probleme = ProblemDetail.forStatusAndDetail(status, "Un ou plusieurs champs sont invalides.");
     probleme.setTitle("Requête invalide");
     probleme.setType(URI.create("https://api.catalogue/problems/validation"));
-    probleme.setProperty("erreurs", erreurs);
+    // probleme.setProperty("erreurs", erreurs);
+    ValidationProblemDetail validationProbleme = new ValidationProblemDetail(probleme, erreurs);
 
-    return handleExceptionInternal(exception, probleme, headers, status, request);
+    return handleExceptionInternal(exception, validationProbleme, headers, status, request);
   }
 
   @ExceptionHandler(ExceptionSkuDejaPresent.class)
   ProblemDetail handleSkuDejaPresent(ExceptionSkuDejaPresent exception) {
-    ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, exception.getMessage());
+    ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "Un produit avec ce SKU existe déjà.");
     problem.setTitle("SKU déjà utilisé");
-    problem.setProperty("code", "SKU_ALREADY_EXISTS");
+    problem.setType(URI.create("https://api.catalogue/problems/sku-already-exists"));
+    // problem.setProperty("code", "SKU_ALREADY_EXISTS");
 
-    return problem;
+    return new SkuDejaPresentProblemDetail(problem, exception.sku());
   }
 }

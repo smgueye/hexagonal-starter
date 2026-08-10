@@ -14,9 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import web.CreerProduitRequest;
 import web.ReponseProduitCree;
+import web.validation.SkuDejaPresentProblemDetail;
+import web.validation.ValidationProblemDetail;
 
 @Tag(name = "Catalogue", description = "Gestion des produits du catalogue")
 @RequestMapping("api/v1/catalogue/produits")
@@ -26,13 +27,28 @@ public interface CatalogueApi {
     operationId = "creerUnProduit",
     summary = "Créer un produit",
     description = "Crée un nouveau produit dans le catalogue.")
-  @ApiResponses(
+  @ApiResponses({
     @ApiResponse(
       responseCode = "201",
       description = "Produit créé avec succès",
       content = @Content(
         mediaType = MediaType.APPLICATION_JSON_VALUE,
-        schema = @Schema(implementation = ProduitCree.class))))
+        schema = @Schema(implementation = ProduitCree.class))),
+
+    @ApiResponse(
+      responseCode = "400",
+      description = "Requête invalide",
+      content = @Content(
+        mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
+        schema = @Schema(implementation = ValidationProblemDetail.class))),
+
+      @ApiResponse(
+        responseCode = "409",
+        description = "Un produit avec ce SKU existe déjà",
+        content = @Content(
+          mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
+          schema = @Schema(implementation = SkuDejaPresentProblemDetail.class)))
+  })
   @PostMapping(
     consumes = MediaType.APPLICATION_JSON_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
