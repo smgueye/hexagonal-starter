@@ -1,0 +1,5 @@
+spring:
+  config:
+    import:
+      - classpath:persistence-adapter.yaml
+      - classpath:web-adapter.yaml

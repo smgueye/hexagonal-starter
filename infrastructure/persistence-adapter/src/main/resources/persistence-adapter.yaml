@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${CATALOGUE_DB_URL}
+    url: jdbc:postgresql://localhost:5432/catalogue_service
     username: ${CATALOGUE_DB_USER}
     password: ${CATALOGUE_DB_PASSWORD}
 

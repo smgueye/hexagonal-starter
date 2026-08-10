@@ -11,4 +11,4 @@ COPY container/target/module-path/*.jar /app/module-path/
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "--module-path", "/app/module-path",  "--add-modules", "ALL-MODULE-PATH", "--module", "container/container.Runner", "/app/ports-adapters.properties"]
+ENTRYPOINT ["java", "--module-path", "/app/module-path",  "--add-modules", "ALL-MODULE-PATH", "--module", "container/container.CatalogueApplication", "/app/ports-adapters.properties"]
