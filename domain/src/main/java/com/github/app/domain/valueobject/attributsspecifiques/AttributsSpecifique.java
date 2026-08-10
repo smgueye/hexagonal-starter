@@ -9,19 +9,19 @@ import java.util.Optional;
 
 public final class AttributsSpecifique extends ValueObject {
 
-  private final Map<String, Attribut> attributs;
+  private final Map<String, String> attributs;
 
-  public AttributsSpecifique(Map<String, Attribut> attributs) {
+  public AttributsSpecifique(Map<String, String> attributs) {
     this.attributs = Map.copyOf(attributs);
   }
 
-  public Optional<Attribut> obtenir(String nom) {
+  public Optional<String> obtenir(String nom) {
     return Optional.ofNullable(attributs.get(nom));
   }
 
   // TODO - Equals & Hash
 
-  public Collection<Attribut> tous() {
-    return List.copyOf(attributs.values());
+  public Map<String, String> attrs() {
+    return Map.copyOf(attributs);
   }
 }

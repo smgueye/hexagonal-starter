@@ -11,9 +11,7 @@ public interface PourGererLesProduits {
 
   boolean existeAvecUnSku(Sku sku);
 
-  void creerUnProduit(Produit produit);
-
   Optional<Produit> rechercherUnProduitParId(ProduitId produitId);
 
-  void enregistrer(Produit produit);
+  void creerUnProduit(Produit produit);
 }

@@ -43,7 +43,7 @@ public class EntiteJpaProduit implements Serializable {
 
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "attributs_specifiques", nullable = false, columnDefinition = "jsonb")
-  private Map<String, AttributJson> attributsSpecifiques;
+  private Map<String, String> attributsSpecifiques;
 
   @Column(name = "cree_le", nullable = false)
   private Instant creeLe;
@@ -82,7 +82,7 @@ public class EntiteJpaProduit implements Serializable {
     return statut;
   }
 
-  public Map<String, AttributJson> attributsSpecifiques() {
+  public Map<String, String> attributsSpecifiques() {
     return attributsSpecifiques;
   }
 

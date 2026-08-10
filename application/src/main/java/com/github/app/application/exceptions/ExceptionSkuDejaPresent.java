@@ -1,6 +1,6 @@
 package com.github.app.application.exceptions;
 
-public final class ExceptionSkuDejaPresent extends Exception {
+public final class ExceptionSkuDejaPresent extends RuntimeException {
 
   private final String sku;
 

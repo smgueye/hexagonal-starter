@@ -1,8 +1,10 @@
 package web;
 
+import com.github.app.application.commandes.ConsulterUnProduitCommand;
 import com.github.app.application.commandes.CreationDeProduitCommand;
 import com.github.app.application.exceptions.ExceptionSkuDejaPresent;
 import com.github.app.application.resultats.ProduitCree;
+import com.github.app.application.resultats.ProduitDetail;
 import com.github.app.application.usecases.PourGererLeCatalogue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import web.api.CatalogueApi;
 import web.errors.ApiExceptionHandler;
+
+import java.util.UUID;
 
 @RestController
 public class CatalogueController implements CatalogueApi {
@@ -32,10 +36,18 @@ public class CatalogueController implements CatalogueApi {
         request.marque(),
         request.prixUnitaire(),
         request.attributsSpecifiques()));
-    var response = new ReponseProduitCree(produitCree.id().value(), produitCree.sku().valeur(), produitCree.statut().type());
-    LOG.info("Réponse HTTP={}", response);
+
     return ResponseEntity
       .status(HttpStatus.CREATED)
-      .body(response);
+      .body(new ReponseProduitCree(produitCree.id().value(), produitCree.sku().valeur(), produitCree.statut().type()));
+  }
+
+  @Override
+  public ResponseEntity<ReponseDetailDuProduit> consulterUnProduit(UUID produitId) {
+    ProduitDetail produit = gestionnaireDeCatalogue.consulterUnProduit(new ConsulterUnProduitCommand(produitId));
+    return ResponseEntity
+      .status(HttpStatus.OK)
+        .body(new ReponseDetailDuProduit(produit.id(), produit.sku(), produit.nom(), produit.famille(),
+                  produit.marque(), produit.prixUnitaire(), produit.statut(), produit.attributs()));
   }
 }

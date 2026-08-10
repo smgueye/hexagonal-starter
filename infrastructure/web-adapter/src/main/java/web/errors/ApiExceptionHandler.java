@@ -1,5 +1,6 @@
 package web.errors;
 
+import com.github.app.application.exceptions.ExceptionProduitNonTrouve;
 import jakarta.servlet.http.HttpServletRequest;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -19,8 +20,7 @@ import java.net.URI;
 import java.util.List;
 
 import com.github.app.application.exceptions.ExceptionSkuDejaPresent;
-import web.validation.SkuDejaPresentProblemDetail;
-import web.validation.ValidationProblemDetail;
+import web.validation.ValidationCodeErreur;
 
 
 @RestControllerAdvice
@@ -68,9 +68,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Override
   protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
-                                                                          HttpHeaders headers,
-                                                                          HttpStatusCode status,
-                                                                          WebRequest request) {
+                                                                          @NonNull HttpHeaders headers,
+                                                                          @NonNull HttpStatusCode status,
+                                                                          @NonNull WebRequest request) {
     List<ErreurChamp> erreurs = exception.getBindingResult()
       .getFieldErrors()
       .stream()
@@ -86,7 +86,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     ProblemDetail probleme = ProblemDetail.forStatusAndDetail(status, "Un ou plusieurs champs sont invalides.");
     probleme.setTitle("Requête invalide");
     probleme.setType(URI.create("https://api.catalogue/problems/validation"));
-    // probleme.setProperty("erreurs", erreurs);
     ValidationProblemDetail validationProbleme = new ValidationProblemDetail(probleme, erreurs);
 
     return handleExceptionInternal(exception, validationProbleme, headers, status, request);
@@ -97,8 +96,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "Un produit avec ce SKU existe déjà.");
     problem.setTitle("SKU déjà utilisé");
     problem.setType(URI.create("https://api.catalogue/problems/sku-already-exists"));
-    // problem.setProperty("code", "SKU_ALREADY_EXISTS");
 
     return new SkuDejaPresentProblemDetail(problem, exception.sku());
+  }
+
+  @ExceptionHandler(ExceptionProduitNonTrouve.class)
+  ProblemDetail handleProduitNonTrouve(ExceptionProduitNonTrouve exception) {
+    ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "Le produit est introuvable.");
+    problem.setTitle("Produit introuvable");
+    problem.setType(URI.create("https://api.catalogue/problems/produit-introuvable"));
+
+    return new ProduitNonTrouveProblemDetail(problem, exception.getProduitId());
   }
 }

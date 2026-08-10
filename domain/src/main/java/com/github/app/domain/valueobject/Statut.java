@@ -10,9 +10,9 @@ public enum Statut {
   ACTIF("Actif"),
   ARCHIVE("Archivé");
 
-  public static final Map<String, Statut> PAR_TYPE = Arrays
+  public static final Map<String, Statut> PAR_NOM = Arrays
       .stream(Statut.values())
-      .collect(Collectors.toUnmodifiableMap(Statut::type, Function.identity()));
+      .collect(Collectors.toUnmodifiableMap(Statut::name, Function.identity()));
 
   private final String type;
 
@@ -25,6 +25,6 @@ public enum Statut {
   }
 
   public static Optional<Statut> chercherParType(String unType) {
-    return Optional.ofNullable(PAR_TYPE.get(unType));
+    return Optional.ofNullable(PAR_NOM.get(unType.toUpperCase()));
   }
 }

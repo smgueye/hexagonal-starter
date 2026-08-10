@@ -42,17 +42,17 @@ public class TestAgregatProduit {
       p -> assertThat(produit.prixUnitaire()).isEqualTo(new Argent(new BigDecimal("89.90"))),
       p ->  assertThat(produit.statut()).isEqualTo(Statut.ACTIF));
 
-    assertAttribut(produit.attributsSpecifique(), "puissance", new Texte("500w"));
-    assertAttribut(produit.attributsSpecifique(), "poids", new Numerique(1.8));
-    assertAttribut(produit.attributsSpecifique(), "unite", new Texte("KG"));
+    assertAttribut(produit.attributsSpecifique(), "puissance", "500w");
+    assertAttribut(produit.attributsSpecifique(), "poids","1.8");
+    assertAttribut(produit.attributsSpecifique(), "unite", "KG");
   }
 
-  private static void assertAttribut(AttributsSpecifique attributs, String nom, Object valeurAttendue) {
+  private static void assertAttribut(AttributsSpecifique attributs, String nom, String valeurAttendue) {
     assertThat(attributs.obtenir(nom))
       .as("attribut spécifique <%s>", nom)
       .hasValueSatisfying(attribut -> {
-        assertThat(attribut.nom()).isEqualTo(nom);
-        assertThat(attribut.valeur()).isEqualTo(valeurAttendue);
+        assertThat(attribut).isNotNull();
+        assertThat(attribut).isEqualTo(valeurAttendue);
       });
   }
 
@@ -155,7 +155,7 @@ public class TestAgregatProduit {
 
   private Produit.Builder unProduitBuilder() {
     return Produit.Builder
-        .builder()
+      .builder()
         .avecId(new ProduitId(UUID.fromString("54b485e1-f3f7-45ed-b971-4ce18c32da7a")))
         .avecSku(new Sku("TRN-PRC-500W"))
         .avecNom("Perceuse sans fil 500W")
@@ -164,8 +164,8 @@ public class TestAgregatProduit {
         .avecPrixUnitaire(new Argent(new BigDecimal("89.90")))
         .avecStatut(Statut.ACTIF)
         .avecAttributsSpecifique(new AttributsSpecifique(Map.of(
-            "puissance", new Attribut("puissance", new Texte("500w")),
-            "poids", new Attribut("poids", new Numerique(1.8)),
-            "unite", new Attribut("unite", new Texte("KG")))));
+          "puissance", "500w",
+          "poids","1.8",
+          "unite", "KG")));
   }
 }

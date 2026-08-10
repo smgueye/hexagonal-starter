@@ -1,4 +1,4 @@
-package web.validation;
+package web.errors;
 
 import org.springframework.http.ProblemDetail;
 
@@ -10,7 +10,7 @@ public class SkuDejaPresentProblemDetail extends ProblemDetail {
   public SkuDejaPresentProblemDetail(ProblemDetail problemDetail, String sku) {
     super(problemDetail);
 
-    this.code = "SKU_DEJA_PRESENT";
+    this.code = CodeErreur.SKU_DEJA_PRESENT.name();
     this.sku = sku;
   }
 

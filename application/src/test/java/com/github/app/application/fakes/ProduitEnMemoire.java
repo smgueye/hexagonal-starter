@@ -27,17 +27,12 @@ public class ProduitEnMemoire implements PourGererLesProduits {
   }
 
   @Override
-  public void creerUnProduit(Produit produit) {
-    produits.put(produit.id(), produit);
-  }
-
-  @Override
   public Optional<Produit> rechercherUnProduitParId(ProduitId produitId) {
     return Optional.ofNullable(produits.get(produitId));
   }
 
   @Override
-  public void enregistrer(Produit produit) {
+  public void creerUnProduit(Produit produit) {
     produits.put(produit.id(), produit);
   }
 }

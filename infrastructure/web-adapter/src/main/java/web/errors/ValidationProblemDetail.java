@@ -1,7 +1,6 @@
-package web.validation;
+package web.errors;
 
 import org.springframework.http.ProblemDetail;
-import web.errors.ErreurChamp;
 
 import java.util.List;
 

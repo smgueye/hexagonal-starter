@@ -1,4 +1,4 @@
-package web.errors;
+package web.validation;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public enum ValidationCodeErreur {
   REQUIRED("Requis(e)"),
-  MUST_BE_POSITIVE("Doit etre positif"),
+  MUST_BE_POSITIVE("Doit être positif"),
   INVALID_ENUM("Valeur invalide"),
   INVALID("Invalide");
 

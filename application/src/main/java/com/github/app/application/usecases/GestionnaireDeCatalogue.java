@@ -1,13 +1,16 @@
 package com.github.app.application.usecases;
 
 import com.github.app.application.Messages;
+import com.github.app.application.commandes.ConsulterUnProduitCommand;
 import com.github.app.application.commandes.CreationDeProduitCommand;
 import com.github.app.application.exceptions.ExceptionFamilleNonTrouve;
-import com.github.app.application.exceptions.ExceptionMetier;
+import com.github.app.application.exceptions.ExceptionProduitNonTrouve;
 import com.github.app.application.exceptions.ExceptionSkuDejaPresent;
 import com.github.app.application.resultats.ProduitCree;
+import com.github.app.application.resultats.ProduitDetail;
 import com.github.app.domain.PourGererLesProduits;
 import com.github.app.domain.Produit;
+import com.github.app.domain.ProduitId;
 import com.github.app.domain.valueobject.Famille;
 import com.github.app.domain.valueobject.Marque;
 import com.github.app.domain.valueobject.Sku;
@@ -15,6 +18,7 @@ import com.github.app.domain.valueobject.Statut;
 import com.github.app.domain.valueobject.attributsspecifiques.Attribut;
 import com.github.app.domain.valueobject.attributsspecifiques.AttributsSpecifique;
 import com.github.app.domain.valueobject.attributsspecifiques.Texte;
+import com.github.app.domain.valueobject.attributsspecifiques.ValeurAttribut;
 import core.lib.Argent;
 import core.lib.UseCase;
 import org.slf4j.Logger;
@@ -25,18 +29,21 @@ import java.util.Map;
 import java.util.Optional;
 
 @UseCase(code = "UC1")
-public final class CreationDeProduit implements PourGererLeCatalogue {
+public final class GestionnaireDeCatalogue implements PourGererLeCatalogue {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CreationDeProduit.class);
+  private static final Logger LOG = LoggerFactory.getLogger(GestionnaireDeCatalogue.class);
 
   private final PourGererLesProduits pourGererLesProduits;
 
-  public CreationDeProduit(PourGererLesProduits pourGererLesProduits) {
+  public GestionnaireDeCatalogue(PourGererLesProduits pourGererLesProduits) {
     this.pourGererLesProduits = pourGererLesProduits;
   }
 
   @Override
+  // @Transactional
   public ProduitCree creerUnProduit(CreationDeProduitCommand commande) throws ExceptionSkuDejaPresent {
+    commande.validate();
+
     Optional<Famille> resultat = Famille.chercherParNom(commande.famille());
     if (resultat.isEmpty()) {
       throw new ExceptionFamilleNonTrouve(commande.famille());
@@ -58,18 +65,30 @@ public final class CreationDeProduit implements PourGererLeCatalogue {
         .avecAttributsSpecifique(enSpecificationsProduit(commande.attributsSpecifiques()))
       .build();
 
-    pourGererLesProduits.enregistrer(produit);
+    pourGererLesProduits.creerUnProduit(produit);
 
-    var produitCree = new ProduitCree(produit.id(), produit.sku(), produit.statut());
-    LOG.info("Produit créé application={}", produitCree);
-    return produitCree;
+    return new ProduitCree(produit.id(), produit.sku(), produit.statut());
   }
 
-  private AttributsSpecifique enSpecificationsProduit(Map<String, Map<String, String>> specs) {
-    Map<String, Attribut> attributsSpecifiques = new HashMap<>();
-    specs.forEach((key, attr) -> {
-      attributsSpecifiques.put(key, new Attribut(key, new Texte(attr.get(key))));
-    });
-    return new AttributsSpecifique(attributsSpecifiques);
+  @Override
+  public ProduitDetail consulterUnProduit(ConsulterUnProduitCommand command) {
+    command.validate();
+
+    return pourGererLesProduits
+      .rechercherUnProduitParId(new ProduitId(command.id()))
+      .map(produit -> new ProduitDetail(
+        produit.id().value(),
+        produit.sku().valeur(),
+        produit.nom(),
+        produit.famille().name().toLowerCase(),
+        produit.marque().valeur(),
+        produit.prixUnitaire().montant(),
+        produit.statut().type(),
+        produit.attributsSpecifique().attrs()))
+      .orElseThrow(() -> new ExceptionProduitNonTrouve(command.id()));
+  }
+
+  private AttributsSpecifique enSpecificationsProduit(Map<String, String> specs) {
+    return new AttributsSpecifique(specs);
   }
 }

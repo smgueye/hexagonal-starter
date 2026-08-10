@@ -17,7 +17,7 @@ public class ScenarioTransactionnel {
 
   Produit executer(Produit produit) throws Exception {
     return transaction.executer(() -> {
-      gestionnaireDeProduit.enregistrer(produit);
+      gestionnaireDeProduit.creerUnProduit(produit);
 
       throw new ErreurSimulee("Erreur simulée");
     });

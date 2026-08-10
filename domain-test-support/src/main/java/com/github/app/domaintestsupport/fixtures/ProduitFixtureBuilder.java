@@ -35,9 +35,9 @@ public final class ProduitFixtureBuilder {
         .avecPrixUnitaire(new Argent(new BigDecimal("89.90")))
         .avecStatut(Statut.ACTIF)
         .avecAttributsSpecifique(new AttributsSpecifique(Map.of(
-            "puissance", new Attribut("puissance", new Texte("500w")),
-            "poids", new Attribut("poids", new Numerique(1.8)),
-            "unite", new Attribut("unite", new Texte("KG"))
+          "puissance", "500w",
+          "poids", "1.8",
+          "unite", "KG"
         ))));
   }
 

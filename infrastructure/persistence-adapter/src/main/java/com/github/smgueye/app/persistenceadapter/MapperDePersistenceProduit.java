@@ -32,22 +32,11 @@ public class MapperDePersistenceProduit {
       .build();
   }
 
-  private Map<String, AttributJson> versJson(AttributsSpecifique attributs) {
+  private Map<String, String> versJson(AttributsSpecifique attributs) {
     if (attributs == null)
       return Collections.emptyMap();
 
-    return attributs
-      .tous()
-      .stream()
-      .collect(Collectors.toUnmodifiableMap(Attribut::nom, this::versJson));
-  }
-
-  private AttributJson versJson(Attribut attribut) {
-    return switch (attribut.valeur()) {
-      case Texte texte -> AttributJson.texte(texte.valeur());
-      case Numerique numerique -> AttributJson.numerique(numerique.valeur());
-      case Booleen booleen -> AttributJson.booleen(booleen.valeur());
-    };
+    return attributs.attrs();
   }
 
   public Produit versProduit(EntiteJpaProduit entite) {
@@ -55,12 +44,11 @@ public class MapperDePersistenceProduit {
         .avecId(new ProduitId(entite.id()))
         .avecSku(new Sku(entite.sku()))
         .avecNom(entite.nom())
-        .avecFamille(Famille.chercherParType(entite.famille()).orElseThrow())
+        .avecFamille(Famille.chercherParNom(entite.famille()).orElseThrow())
         .avecMarque(new Marque(entite.marque()))
         .avecPrixUnitaire(new Argent(entite.prixUnitaire()))
         .avecStatut(Statut.chercherParType(entite.statut()).orElseThrow())
-        // TODO .avecAttributsSpecifique(entite.attributsSpecifiques())
-        // TODO .
+        .avecAttributsSpecifique(new AttributsSpecifique(entite.attributsSpecifiques()))
         .build();
   }
 }

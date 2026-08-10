@@ -3,20 +3,13 @@ package web;
 import com.github.app.application.usecases.PourGererLeCatalogue;
 import com.github.app.domain.PourGererLesProduits;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import web.errors.ValidationCodeErreur;
 
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("Catalogue Controller")
 @WebMvcTest(CatalogueController.class)

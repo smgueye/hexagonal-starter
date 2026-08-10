@@ -31,5 +31,5 @@ public record CreerProduitRequest(
     @Positive(message = "{catalogue.produit.prix-unitaire.positive}")
     BigDecimal prixUnitaire,
 
-    Map<String, Map<String, String>> attributsSpecifiques) {
+    Map<String, String> attributsSpecifiques) {
 }

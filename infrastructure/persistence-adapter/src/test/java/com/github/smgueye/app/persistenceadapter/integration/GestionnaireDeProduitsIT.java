@@ -51,7 +51,7 @@ public class GestionnaireDeProduitsIT {
       .avecSku(new Sku(String.format("TRN-%s", UUID.randomUUID())))
       .build();
 
-    gestionnaireDeProduits.enregistrer(produit);
+    gestionnaireDeProduits.creerUnProduit(produit);
 
     assertThat(gestionnaireDeProduits.existeAvecUnSku(produit.sku())).isTrue();
   }
@@ -79,10 +79,10 @@ public class GestionnaireDeProduitsIT {
         .avecSku(sku)
         .build();
 
-      gestionnaireDeProduits.enregistrer(premier);
+      gestionnaireDeProduits.creerUnProduit(premier);
 
       assertThatThrownBy(() -> {
-        gestionnaireDeProduits.enregistrer(second);
+        gestionnaireDeProduits.creerUnProduit(second);
         entityManager.flush();
       }).isInstanceOf(DataIntegrityViolationException.class);
     }
@@ -94,22 +94,21 @@ public class GestionnaireDeProduitsIT {
       Produit produit = ProduitFixtureBuilder.unBuilderAvecDonneesValides()
         .avecSku(new Sku(sku))
         .avecAttributsSpecifique(new AttributsSpecifique(Map.of(
-          "couleur", new Attribut("couleur", new Texte("Rouge")),
-          "puissance", new Attribut("puissance", new Numerique(500)),
-          "disponible", new Attribut("disponible", new Booleen(true))
-        )))
-        .build();
+          "couleur", "Rouge",
+          "puissance", "500",
+          "disponible", "true"))
+        ).build();
 
-      gestionnaireDeProduits.enregistrer(produit);
+      gestionnaireDeProduits.creerUnProduit(produit);
 
       EntiteJpaProduit produitRelu = repositoryJpaProduit
         .findBySku(sku)
         .orElseThrow();
 
       assertThat(produitRelu.attributsSpecifiques())
-        .containsEntry("couleur", AttributJson.texte("Rouge"))
-        .containsEntry("puissance", AttributJson.numerique(500))
-        .containsEntry("disponible", AttributJson.booleen(true));
+        .containsEntry("couleur", "Rouge")
+        .containsEntry("puissance", "500")
+        .containsEntry("disponible", "true");
     }
   }
 }

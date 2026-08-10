@@ -34,17 +34,12 @@ public class GestionnaireDeProduit implements PourGererLesProduits {
   }
 
   @Override
-  public void enregistrer(Produit produit) {
+  public void creerUnProduit(Produit produit) {
     depotJpa.save(mapperDePersistenceProduit.versEntiteJpa(produit));
   }
 
   @Override
   public Optional<Produit> rechercherUnProduitParId(ProduitId produitId) {
     return depotJpa.findById(produitId.value()).map(mapperDePersistenceProduit::versProduit);
-  }
-
-  @Override
-  public void creerUnProduit(Produit produit) {
-    // TODO A SUPPRIMER
   }
 }

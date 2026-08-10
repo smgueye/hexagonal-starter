@@ -1,13 +1,11 @@
 package com.github.app.application.casutilisations;
 
-import com.github.app.application.Messages;
 import com.github.app.application.commandes.CreationDeProduitCommand;
 import com.github.app.application.exceptions.ExceptionFamilleNonTrouve;
-import com.github.app.application.exceptions.ExceptionMetier;
 import com.github.app.application.exceptions.ExceptionSkuDejaPresent;
 import com.github.app.application.fakes.ProduitEnMemoire;
 import com.github.app.application.resultats.ProduitCree;
-import com.github.app.application.usecases.CreationDeProduit;
+import com.github.app.application.usecases.GestionnaireDeCatalogue;
 import com.github.app.domain.Produit;
 import com.github.app.domain.valueobject.Famille;
 import com.github.app.domain.valueobject.Marque;
@@ -24,10 +22,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("UC1 - Création de produit")
-public class TestCreationDeProduit {
+public class TestGestionnaireDeCatalogue {
 
   private final ProduitEnMemoire persistence = new ProduitEnMemoire();
-  private final CreationDeProduit creationDeProduit = new CreationDeProduit(persistence);
+  private final GestionnaireDeCatalogue gestionnaireDeCatalogue = new GestionnaireDeCatalogue(persistence);
 
   @Test
   @DisplayName("Happy path")
@@ -36,7 +34,7 @@ public class TestCreationDeProduit {
     CreationDeProduitCommand commande = obtenirUneCommandeValide(null);
 
     // When
-    ProduitCree produitCree = creationDeProduit.creerUnProduit(commande);
+    ProduitCree produitCree = gestionnaireDeCatalogue.creerUnProduit(commande);
 
     // Then
     assertThat(produitCree)
@@ -57,9 +55,9 @@ public class TestCreationDeProduit {
       "Bosch",
       new BigDecimal("89.90"),
       Map.of(
-        "puissance", Map.of("puissance", "500W"),
-        "poids", Map.of("poids", "1.8"),
-        "unite", Map.of("unite", "KG"))
+        "puissance", "500W",
+        "poids", "1.8",
+        "unite", "KG")
     );
   }
 
@@ -73,7 +71,7 @@ public class TestCreationDeProduit {
       // Act
       // Given
       assertThatThrownBy(() -> {
-        creationDeProduit.creerUnProduit(obtenirUneCommandeValide("XXX"));
+        gestionnaireDeCatalogue.creerUnProduit(obtenirUneCommandeValide("XXX"));
       })
           .as("La création d'un produit avec une famille inexistante est refusée.")
           .isInstanceOf(ExceptionFamilleNonTrouve.class);
@@ -89,11 +87,11 @@ public class TestCreationDeProduit {
         .avecMarque(new Marque("YYY"))
         .avecNom("XXXX")
         .build();
-      persistence.enregistrer(produit);
+      persistence.creerUnProduit(produit);
 
       // Given
       assertThatThrownBy(() -> {
-        creationDeProduit.creerUnProduit(obtenirUneCommandeValide(null));
+        gestionnaireDeCatalogue.creerUnProduit(obtenirUneCommandeValide(null));
       })
         .as("La création d'un produit avec un sku déjà utilisé est refusée.")
         .isInstanceOf(ExceptionSkuDejaPresent.class);
