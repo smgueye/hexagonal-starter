@@ -23,6 +23,7 @@ import core.lib.Argent;
 import core.lib.UseCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -73,6 +74,12 @@ public final class GestionnaireDeCatalogue implements PourGererLeCatalogue {
   @Override
   public ProduitDetail consulterUnProduit(ConsulterUnProduitCommand command) {
     command.validate();
+
+    // O5.obersavability : Ajout de champs strucutré
+    LOG.atInfo()
+        .addKeyValue("traceId", MDC.get("traceId"))
+        .addKeyValue("spanId", MDC.get("spanId"))
+        .addKeyValue("produit.id", command.id()).log("Produit recherché");
 
     return pourGererLesProduits
       .rechercherUnProduitParId(new ProduitId(command.id()))

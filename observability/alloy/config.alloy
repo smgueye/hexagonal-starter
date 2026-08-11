@@ -1,0 +1,17 @@
+local.file_match "catalogue" {
+  path_targets = [{
+    "__path__" = "/var/log/catalogue/*.log",
+    "service_name" = "catalogue-service",
+  }]
+}
+
+loki.source.file "catalogue" {
+  targets    = local.file_match.catalogue.targets
+  forward_to = [loki.write.local.receiver]
+}
+
+loki.write "local" {
+  endpoint {
+    url = "http://host.docker.internal:3100/loki/api/v1/push"
+  }
+}

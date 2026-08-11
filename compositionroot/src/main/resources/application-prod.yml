@@ -7,14 +7,11 @@ spring:
       - classpath:persistence-adapter.yaml
       - classpath:web-adapter.yaml
 
-# Log structurée en JSON. Observabilité.04.
 logging:
   structured:
     format:
       console: ecs
       file: ecs
-  file:
-    name: ${LOG_FILE_PATH:logs/catalogue-service.log}
 
 management:
   tracing:
@@ -25,7 +22,7 @@ management:
     tracing:
       export:
         otlp:
-          endpoint: ${TRACE_HOST:http://localhost:4318}/v1/traces
+          endpoint: ${TRACE_HOST}/v1/traces
 
   metrics:
     distribution:
