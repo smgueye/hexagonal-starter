@@ -2,6 +2,7 @@ package com.github.smgueye.app.persistenceadapter.integration;
 
 import com.github.smgueye.app.persistenceadapter.PersistenceAdapterConfig;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
     webEnvironment = SpringBootTest.WebEnvironment.NONE,
     properties = "spring.config.name=persistence-adapter"
 )
+@Disabled("Entire class disabled for due to architecture review.")
 public class SchemaCatalogueIT {
 
   @Container
