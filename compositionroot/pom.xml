@@ -6,17 +6,18 @@
   <parent>
     <groupId>com.retail</groupId>
     <artifactId>catalogue-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${revision}</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>com.retail.compositionroot</groupId>
-  <artifactId>compositionroot</artifactId>
+  <artifactId>catalogue-service</artifactId>
 
   <dependencies>
     <dependency>
       <groupId>com.retail.core</groupId>
       <artifactId>core</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.retail.domain</groupId>
@@ -26,17 +27,17 @@
     <dependency>
       <groupId>com.retail.application</groupId>
       <artifactId>application</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.retail.infrastructure.persistence</groupId>
       <artifactId>persistence-adapter</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.retail.infrastructure.web</groupId>
       <artifactId>web-adapter</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
@@ -49,11 +50,6 @@
       <artifactId>testcontainers-postgresql</artifactId>
       <scope>test</scope>
     </dependency>
-
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot-starter-actuator</artifactId>-->
-<!--    </dependency>-->
 
     <dependency>
       <groupId>io.micrometer</groupId>
@@ -82,6 +78,19 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>3.11.0</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+              <goal>build-info</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
