@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>4.1.0</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.retail</groupId>
   <artifactId>catalogue-service</artifactId>
@@ -14,12 +13,12 @@
   <packaging>pom</packaging>
   <name>catalogue-service-parent</name>
   <description>Ce service permet de créer et de rechercher les produits de notre catalogue.</description>
-  <url/>
+  <url />
   <licenses>
-    <license/>
+    <license />
   </licenses>
   <developers>
-    <developer/>
+    <developer />
   </developers>
   <modules>
     <module>compositionroot</module>
@@ -33,7 +32,7 @@
   <scm>
     <connection>scm:git:git@github.com:smgueye/hexagonal-starter.git</connection>
     <developerConnection>scm:git:git@github.com:smgueye/hexagonal-starter.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>v0.0.1</tag>
     <url>https://github.com/smgueye/hexagonal-starter.git</url>
   </scm>
 
@@ -47,7 +46,7 @@
     <maven-surefire.version>3.5.5</maven-surefire.version>
     <maven-failsafe.version>3.5.5</maven-failsafe.version>
 
-    <revision>0.0.1-SNAPSHOT</revision>
+    <revision>0.0.1</revision>
   </properties>
 
   <dependencies>
