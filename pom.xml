@@ -47,10 +47,10 @@
     <maven-surefire.version>3.5.5</maven-surefire.version>
     <maven-failsafe.version>3.5.5</maven-failsafe.version>-->
     <project.build.outputTimestamp>
-      2026-08-14T22:30:41Z
+      2026-08-13T00:00:00Z
     </project.build.outputTimestamp>
 
-    <revision>0.0.3-SNAPSHOT</revision>
+    <revision>0.0.2-SNAPSHOT</revision>
   </properties>
 
   <dependencies>
