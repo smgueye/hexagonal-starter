@@ -41,6 +41,7 @@
 
     <junit.version>6.1.2</junit.version>
     <assertj.version>3.27.7</assertj.version>
+    <postgresql.version>42.7.13</postgresql.version>
 
     <!-- TODO
     <maven-surefire.version>3.5.5</maven-surefire.version>
