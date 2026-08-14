@@ -42,9 +42,12 @@
     <junit.version>6.1.2</junit.version>
     <assertj.version>3.27.7</assertj.version>
 
-    <!-- TODO -->
+    <!-- TODO
     <maven-surefire.version>3.5.5</maven-surefire.version>
-    <maven-failsafe.version>3.5.5</maven-failsafe.version>
+    <maven-failsafe.version>3.5.5</maven-failsafe.version>-->
+    <project.build.outputTimestamp>
+      2026-08-13T00:00:00Z
+    </project.build.outputTimestamp>
 
     <revision>0.0.2-SNAPSHOT</revision>
   </properties>
