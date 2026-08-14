@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>4.1.0</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.retail</groupId>
   <artifactId>catalogue-service</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${revision}</version>
   <packaging>pom</packaging>
-  <name>catalogue-service</name>
-  <description>catalogue-service</description>
-  <url/>
+  <name>catalogue-service-parent</name>
+  <description>Ce service permet de créer et de rechercher les produits de notre catalogue.</description>
+  <url />
   <licenses>
-    <license/>
+    <license />
   </licenses>
   <developers>
-    <developer/>
+    <developer />
   </developers>
   <modules>
     <module>compositionroot</module>
@@ -29,11 +28,12 @@
     <module>domain</module>
     <module>domain-test-support</module>
   </modules>
+
   <scm>
-    <connection/>
-    <developerConnection/>
-    <tag/>
-    <url/>
+    <connection>scm:git:git@github.com:smgueye/hexagonal-starter.git</connection>
+    <developerConnection>scm:git:git@github.com:smgueye/hexagonal-starter.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/smgueye/hexagonal-starter.git</url>
   </scm>
 
   <properties>
@@ -41,10 +41,16 @@
 
     <junit.version>6.1.2</junit.version>
     <assertj.version>3.27.7</assertj.version>
+    <postgresql.version>42.7.13</postgresql.version>
 
-    <!-- TODO -->
+    <!-- TODO
     <maven-surefire.version>3.5.5</maven-surefire.version>
-    <maven-failsafe.version>3.5.5</maven-failsafe.version>
+    <maven-failsafe.version>3.5.5</maven-failsafe.version>-->
+    <project.build.outputTimestamp>
+      2026-08-13T00:00:00Z
+    </project.build.outputTimestamp>
+
+    <revision>0.0.2-SNAPSHOT</revision>
   </properties>
 
   <dependencies>
@@ -65,9 +71,6 @@
       <artifactId>assertj-core</artifactId>
       <version>3.27.7</version>
       <scope>test</scope>
-      <!--<version>${assertj.version}</version> TODO -->
-      <!--<type>pom</type>-->
-      <!--<scope>import</scope>-->
     </dependency>
   </dependencies>
 
@@ -132,6 +135,16 @@
         </executions>
       </plugin>
 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>3.3.1</version>
+
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <tagNameFormat>v@{project.version}</tagNameFormat>
+        </configuration>
+      </plugin>
       <!-- TODO Verification des dependances modulaire -->
       <!--<plugin>
         <groupId>org.apache.maven.plugins</groupId>

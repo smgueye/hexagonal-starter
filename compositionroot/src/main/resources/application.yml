@@ -11,7 +11,7 @@ spring:
 logging:
   structured:
     format:
-      console: ecs
+      # console: ecs
       file: ecs
   file:
     name: ${LOG_FILE_PATH:logs/catalogue-service.log}

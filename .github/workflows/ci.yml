@@ -2,11 +2,22 @@ name: Service Catalogue (CI) # [WORKFLOW]
 
 on: # [EVENEMENT]
   push:
+
+  # A decommenter une fois tout le workflow pret.
+  # push:
+  #  branches:
+  #    - master
+
+  # pull_request:
+  #  branches:
+  #    - master
+
   workflow_dispatch: # Mannuel
+
 
 # Le workflow ne doit pas pouvoir écrire
 permissions:
-  contents: read
+  contents: read # security tip #1
 
 # En cas de nouveau push sur la meme branche, annuler celle en cours.
 concurrency:
@@ -16,32 +27,137 @@ concurrency:
 
 jobs: # [JOBS]
   verify:
-    name: Verify
+    name: Maven verify
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
-      - name: Checkout du dépot
-        uses: actions/checkout@v7
+      - name: Checkout du dépot # 1. Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: 'false'
 
-      - name: Setup Java 21
-        uses: actions/setup-java@v5
+      - name: Setup Java 21 # 2. Java 21
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
         with:
           distribution: temurin
           java-version: "21"
           cache: maven
 
-      - name: Version de la stack
+      - name: Versions des outils
         run: |
           java --version
           ./mvnw --version
 
-      - name: Vérifier le projet
+      - name: Verification maven # 3. Maven verify / construction du jar
         run: ./mvnw --batch-mode --no-transfer-progress verify
+
+      - name: La version du projet
+        id: version
+        run: |
+          VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Upload application JAR # 4. Github action artefact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: catalogue-service-${{ steps.version.outputs.version }}
+          path: compositionroot/target/catalogue-service-${{ steps.version.outputs.version }}.jar
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Construction de l'image Docker
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          docker build \
+            -f deploy/docker/Dockerfile \
+            --build-arg VERSION="$VERSION" \
+            --build-arg VCS_REF="${{ github.sha }}" \
+            --build-arg SOURCE_URL="${{ github.server_url }}/${{ github.repository }}" \
+            -t catalogue-service:"$VERSION" \
+            .
+
+      # Smock test
+      - name: Smock Test - démarrer PostgreSQL
+        run: |
+          docker network create catalogue-ci
+          docker run -d \
+            --name catalogue-database \
+            --network catalogue-ci \
+            -e POSTGRES_DB=catalogue_service \
+            -e POSTGRES_USER=catalogue \
+            -e POSTGRES_PASSWORD=catalogue \
+            postgres:16
+          
+          for i in {1..30}; do
+            if docker exec catalogue-database \
+              pg_isready -U catalogue -d catalogue_service; then
+              exit 0;
+            fi
+            sleep 1
+          done
+          
+          docker logs catalogue-database
+          exit 1
+
+      - name: Smock Test - démarrer le service catalogue
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          docker run -d \
+          --name catalogue-service \
+          --network catalogue-ci \
+          -p 8080:8080 \
+          -e SPRING_PROFILES_ACTIVE=prod \
+          -e DB_URL=jdbc:postgresql://catalogue-database:5432/catalogue_service \
+          -e DB_USER=catalogue \
+          -e DB_PASSWORD=catalogue \
+          -e DB_MAX_POOL_SIZE=10 \
+          -e DB_CONNECTION_TIMEOUT=30000 \
+          -e LIQUIBASE_ENABLED=true \
+          -e TRACE_HOST=http://127.0.0.1:4318 \
+          catalogue-service:"$VERSION"
+
+      - name: Smock Test
+        run: |
+          for i in {1..30}; do
+            if curl --fail --silent \
+              http://localhost:8080/actuator/health/readiness; then
+              exit 0
+            fi
+            sleep 2
+          done
+            
+          echo "Application did not become ready"
+          docker logs catalogue-service
+          exit 1
+
+      - name: Echec des logs Docker
+        if: failure()
+        run: |
+          docker logs catalogue-service || true
+          docker logs catalogue-database || true
+
+      - name: Cleanup containers
+        if: always()
+        run: |
+          docker rm -f catalogue-service catalogue-database || true
+          docker network rm catalogue-ci || true
+
+      - name: Scanner les vulnerabilites de l'image
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          image-ref: catalogue-service:${{ steps.version.outputs.version }}
+          format: table
+          severity: CRITICAL,HIGH
+          exit-code: 1
+          ignore-unfixed: true
+          
 
       - name: Charger le rapport de tests échoués
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # security tip #2
         with:
           name: rapport-de-tests-${{github.run_id}}
           path: |

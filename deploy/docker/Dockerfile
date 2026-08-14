@@ -1,14 +1,33 @@
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jammy
 
-LABEL authors="smgueye"
+ARG VERSION
+ARG VCS_REF
+ARG SOURCE_URL
 
-WORKDIR /app
-RUN mkdir -p /app/module-path
+LABEL org.opencontainers.image.title="catalogue-service" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.revision="${VCS_REF}" \
+      org.opencontainers.image.source="${SOURCE_URL}"
 
-COPY scripts/ports-adapters.properties /app/ports-adapters.properties
-COPY container/target/container-*.jar /app/module-path/
-COPY container/target/module-path/*.jar /app/module-path/
+WORKDIR app
+
+ARG APP_UID=10001
+ARG APP_GID=10001
+
+RUN groupadd --gid ${APP_GID} catalogue \
+  && useradd \
+    --uid ${APP_UID} \
+    --gid ${APP_GID} \
+    --no-create-home \
+    --shell /usr/sbin/nologin \
+    catalogue
+
+COPY --chown=${APP_UID}:${APP_GID} \
+     compositionroot/target/catalogue-service-${VERSION}.jar \
+     /app/catalogue-service.jar
+
+USER ${APP_UID}:${APP_GID}
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "--module-path", "/app/module-path",  "--add-modules", "ALL-MODULE-PATH", "--module", "container/container.CatalogueApplication", "/app/ports-adapters.properties"]
+ENTRYPOINT ["java", "-jar", "/app/catalogue-service.jar"]
