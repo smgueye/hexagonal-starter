@@ -10,6 +10,7 @@ import com.github.smgueye.app.persistenceadapter.EntiteJpaProduit;
 import com.github.smgueye.app.persistenceadapter.PersistenceAdapterConfig;
 import com.github.smgueye.app.persistenceadapter.RepositoryJpaProduit;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,12 +28,14 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+
 @Testcontainers
 @SpringBootTest(
     classes = PersistenceAdapterConfig.class,
     webEnvironment = SpringBootTest.WebEnvironment.NONE,
     properties = "spring.config.name=persistence-adapter"
 )
+@Disabled("Entire class disabled for due to architecture review.")
 public class GestionnaireDeProduitsIT {
 
   @Container

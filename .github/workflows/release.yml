@@ -1,0 +1,133 @@
+name: Catalogue Service Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  release:
+    name: Build release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+
+      - name: Setup Java 21
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Determine release version
+        id: version
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+
+          echo "tag=$TAG"
+          echo "version=$VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Verify Maven version matches Git tag
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          MAVEN_VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
+
+          echo "Git tag version : $VERSION"
+          echo "Maven version   : $MAVEN_VERSION"
+
+          test "$VERSION" = "$MAVEN_VERSION"
+
+      - name: Build release JAR
+        run: ./mvnw --batch-mode --no-transfer-progress clean verify
+
+      - name: Generate SHA-256
+        env: ${{ steps.version.outputs.version }}
+        run: |
+          cd compositionroot/target
+          sha256sum "catalogue-service-${VERSION}.jar" > "catalogue-service-${VERSION}.jar.sha256"
+          cat "catalogue-service-${VERSION}.jar.sha256"
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: catalogue-service-${{ steps.version.outputs.version }}
+          path: |
+            compositionroot/target/catalogue-service-${{ steps.version.outputs.version }}.jar
+            compositionroot/target/catalogue-service-${{ steps.version.outputs.version }}.jar.sha256
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Build release Docker image
+        env: ${{ steps.version.outputs.version }}
+        run: |
+          docker build \
+          -f deploy/docker/Dockerfile \
+          --build-arg VERSION="$VERSION" \
+          --build-arg VCS_REF="${{ github.sha }}" \
+          --build-arg SOURCE_URL="${{ github.server_url }}/${{ github.repository }}" \
+          -t catalogue-service:"$VERSION" \
+          .
+
+      - name: Verify release Docker image
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          docker image inspect catalogue-service:"$VERSION" --format 'USER={{.Config.User}}'
+          docker image inspect catalogue-service:"$VERSION" \
+            --format 'VERSION={{index .Config.Labels "org.opencontainers.image.version"}}'
+          docker image inspect catalogue-service:"$VERSION" \
+            --format 'REVISION={{index .Config.Labels "org.opencontainers.image.revision"}}'
+
+      - name: Scan release Docker image
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
+        with:
+          image-ref: catalogue-service:${{ steps.version.outputs.version }}
+          format: table
+          severity: CRITICAL,HIGH
+          exit-code: 1
+          ignore-unfixed: true
+
+      - name: Login to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GHCR_TOKEN" | docker login ghcr.io \
+            --username "${{ github.actor }}" \
+            --password-stdin
+
+      - name: Push release Docker image
+        id: image
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE="ghcr.io/${OWNER}/catalogue-service:${VERSION}"
+
+          docker tag catalogue-service:"$VERSION" "$IMAGE"
+          docker push "$IMAGE"      
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "v${VERSION}" \
+            "compositionroot/target/catalogue-service-${VERSION}.jar" \
+            "compositionroot/target/catalogue-service-${VERSION}.jar.sha256" \
+            --title "Catalogue Service v${VERSION}" \
+            --generate-notes
+      
+      
