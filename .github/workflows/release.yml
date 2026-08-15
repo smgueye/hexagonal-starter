@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
@@ -53,7 +53,8 @@ jobs:
         run: ./mvnw --batch-mode --no-transfer-progress clean verify
 
       - name: Generate SHA-256
-        env: ${{ steps.version.outputs.version }}
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           cd compositionroot/target
           sha256sum "catalogue-service-${VERSION}.jar" > "catalogue-service-${VERSION}.jar.sha256"
@@ -70,7 +71,8 @@ jobs:
           retention-days: 7
 
       - name: Build release Docker image
-        env: ${{ steps.version.outputs.version }}
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           docker build \
           -f deploy/docker/Dockerfile \
@@ -129,5 +131,3 @@ jobs:
             "compositionroot/target/catalogue-service-${VERSION}.jar.sha256" \
             --title "Catalogue Service v${VERSION}" \
             --generate-notes
-      
-      
